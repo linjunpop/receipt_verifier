@@ -1,4 +1,6 @@
 defmodule ReceiptVerifier do
+  alias ReceiptVerifier.Error
+
   @production_url "https://buy.itunes.apple.com/verifyReceipt"
   @sandbox_url "https://sandbox.itunes.apple.com/verifyReceipt"
 
@@ -44,22 +46,22 @@ defmodule ReceiptVerifier do
     {:ok, receipt}
   end
   defp process_response(%{"status" => 21000}) do
-    {:error, "The App Store could not read the JSON object you provided."}
+    {:error, %Error{code: 21000, message: "The App Store could not read the JSON object you provided."}}
   end
   defp process_response(%{"status" => 21002}) do
-    {:error, "The data in the receipt-data property was malformed or missing."}
+    {:error, %Error{code: 21002, message: "The data in the receipt-data property was malformed or missing."}}
   end
   defp process_response(%{"status" => 21003}) do
-    {:error, "The receipt could not be authenticated."}
+    {:error, %Error{code: 21003, message: "The receipt could not be authenticated."}}
   end
   defp process_response(%{"status" => 21004}) do
-    {:error, "The shared secret you provided does not match the shared secret on file for your account."}
+    {:error, %Error{code: 21004, message: "The shared secret you provided does not match the shared secret on file for your account."}}
   end
   defp process_response(%{"status" => 21005}) do
-    {:error, "The receipt server is not currently available."}
+    {:error, %Error{code: 21005, message: "The receipt server is not currently available."}}
   end
   defp process_response(%{"status" => 21006, "receipt" => receipt}) do
-    {:error, "This receipt is valid but the subscription has expired", receipt: receipt}
+    {:error, %Error{code: 21006, message: "This receipt is valid but the subscription has expired"}, receipt: receipt}
   end
   defp process_response(%{"status" => 21007}) do
     # This receipt is from the test environment,

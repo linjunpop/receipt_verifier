@@ -57,6 +57,13 @@ receipt = %{"adam_id" => 0, "app_item_id" => 0, "application_version" => "1241",
   "request_date_ms" => "1461916348197",
   "request_date_pst" => "2016-04-29 00:52:28 America/Los_Angeles",
   "version_external_identifier" => 0}
+```
 
+When something goes wrong, the return value should be `{:error, %ReceiptVerifier.Error{}}`.
+
+For example:
+
+```elixir
+{:error, %ReceiptVerifier.Error{code: 21002, message: "The data in the receipt-data property was malformed or missing."}}
 ```
 
