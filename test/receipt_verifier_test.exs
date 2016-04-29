@@ -4,14 +4,13 @@ defmodule ReceiptVerifierTest do
 
   test "the truth" do
     receipt_file_path = "test/fixtures/receipt"
-    receipt =
+    base64_receipt =
       receipt_file_path
       |> File.read!
       |> String.replace("\n", "")
 
-    result = ReceiptVerifier.verify(receipt)
-    {:ok, %{"application_version" => version}} = result
+    {:ok, receipt} = ReceiptVerifier.verify(base64_receipt)
 
-    assert "1241", version
+    assert "1241", receipt["application_version"]
   end
 end
