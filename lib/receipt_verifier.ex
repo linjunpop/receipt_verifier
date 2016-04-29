@@ -1,0 +1,2 @@
+defmodule ReceiptVerifier do
+end
