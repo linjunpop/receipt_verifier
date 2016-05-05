@@ -9,7 +9,14 @@ defmodule ReceiptVerifier.Mixfile do
      start_permanent: Mix.env == :prod,
      description: description,
      package: package,
-     deps: deps]
+     deps: deps,
+     preferred_cli_env: [
+       vcr: :test,
+       "vcr.delete": :test,
+       "vcr.check": :test,
+       "vcr.show": :test
+     ]
+   ]
   end
 
   # Configuration for the OTP application
@@ -22,8 +29,9 @@ defmodule ReceiptVerifier.Mixfile do
   defp deps do
     [
       {:httpoison, "~> 0.8.0"},
-      {:poison, "~> 2.0"}
-     ]
+      {:poison, "~> 2.0"},
+      {:exvcr, "~> 0.7", only: :test}
+    ]
   end
 
   defp description do
