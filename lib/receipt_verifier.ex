@@ -24,6 +24,8 @@ defmodule ReceiptVerifier do
           {:retry, env} -> do_verify_receipt(receipt, env)
           any -> any
         end
+      {:ok, %HTTPoison.Response{status_code: 503}} ->
+        {:error, %Error{code: 503, message: "Service Unavailable"}}
       {:error, reason} ->
         {:error, reason}
     end
