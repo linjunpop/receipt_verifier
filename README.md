@@ -2,6 +2,9 @@
 
 Verify iTunes receipt.
 
+[![Build
+Status](https://travis-ci.org/linjunpop/receipt_verifier.svg)](https://travis-ci.org/linjunpop/receipt_verifier)
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
