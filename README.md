@@ -12,17 +12,36 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   1. Add receipt_verifier to your list of dependencies in `mix.exs`:
 
-        def deps do
-          [{:receipt_verifier, "~> 0.0.1"}]
-        end
+  ```elixir
+  def deps do
+    [{:receipt_verifier, "~> 0.0.1"}]
+  end
+  ```
 
   2. Ensure receipt_verifier is started before your application:
 
-        def application do
-          [applications: [:receipt_verifier]]
-        end
+  ```elixir
+  def application do
+    [applications: [:receipt_verifier]]
+  end
+  ```
 
 ## Usage
+
+### Configuration
+
+> you can ignore this if you dont have auto-renewable product
+
+Follow [this guide](https://developer.apple.com/library/content/documentation/LanguagesUtilities/Conceptual/iTunesConnectInAppPurchase_Guide/Chapters/CreatingInAppPurchaseProducts.html#//apple_ref/doc/uid/TP40013727-CH3-SW2) to genrate shared secret, then config the `:receipt_verifier` application with:
+
+```elixir
+use Mix.Config
+
+config :receipt_verifier,
+  shared_secret: "my-secret"
+```
+
+### Verify the receipt with the App Store
 
 ```elixir
 {:ok, receipt} = ReceiptVerifier.verify(base64_encoded_receipt_data)
@@ -63,9 +82,11 @@ receipt = %{"adam_id" => 0, "app_item_id" => 0, "application_version" => "1241",
   "version_external_identifier" => 0}
 ```
 
-When something goes wrong, the return value should be `{:error, %ReceiptVerifier.Error{}}`.
+### Error handling
 
-For example:
+If there is error, `ReceiptVerifier.verify/1` will return `{:error, %ReceiptVerifier.Error{}}`.
+
+An example:
 
 ```elixir
 {:error, %ReceiptVerifier.Error{code: 21002, message: "The data in the receipt-data property was malformed or missing."}}
