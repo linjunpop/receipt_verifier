@@ -40,7 +40,8 @@ defmodule ReceiptVerifier do
 
   defp prepare_request_body(receipt) do
     %{
-      "receipt-data" => receipt
+      "receipt-data" => receipt,
+      "password" => load_password
     } |> Poison.encode!
   end
 
@@ -76,5 +77,9 @@ defmodule ReceiptVerifier do
     # but it was sent to the test environment for verification.
     # Send it to the production environment instead.
     {:retry, :prod}
+  end
+
+  defp load_password do
+    Application.get_env(:receipt_verifier, :shared_secret, "")
   end
 end
