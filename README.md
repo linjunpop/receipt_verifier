@@ -5,6 +5,7 @@ Verify iTunes receipt.
 [![Build
 Status](https://travis-ci.org/linjunpop/receipt_verifier.svg)](https://travis-ci.org/linjunpop/receipt_verifier)
 [![Hex.pm](https://img.shields.io/hexpm/v/receipt_verifier.svg?maxAge=2592000)](https://hex.pm/packages/receipt_verifier)
+[![Inline docs](http://inch-ci.org/github/linjunpop/receipt_verifier.svg?branch=master)](http://inch-ci.org/github/linjunpop/receipt_verifier)
 
 ## Installation
 
