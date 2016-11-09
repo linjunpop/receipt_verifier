@@ -2,6 +2,8 @@
 
 ## master
 
+## V0.1.0
+
 * Support auto-renewable subscriptions
 * Handle 503 Service Unavaliable.
 

@@ -1,10 +1,12 @@
 defmodule ReceiptVerifier.Mixfile do
   use Mix.Project
 
+  @version "0.1.0"
+
   def project do
     [
       app: :receipt_verifier,
-      version: "0.0.1",
+      version: @version,
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -45,7 +47,7 @@ defmodule ReceiptVerifier.Mixfile do
   end
 
   defp description do
-    "Verify iTunes Receipt"
+    "Verify iTunes receipt with the App Store"
   end
 
   defp package do

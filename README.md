@@ -1,6 +1,6 @@
 # ReceiptVerifier
 
-Verify iTunes receipt.
+Verify iTunes receipt with the App Store.
 
 [![Build
 Status](https://travis-ci.org/linjunpop/receipt_verifier.svg)](https://travis-ci.org/linjunpop/receipt_verifier)
@@ -15,7 +15,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   ```elixir
   def deps do
-    [{:receipt_verifier, "~> 0.0.1"}]
+    [{:receipt_verifier, "~> 0.1.0"}]
   end
   ```
 
