@@ -80,6 +80,6 @@ defmodule ReceiptVerifier do
   end
 
   defp load_password do
-    Application.get_env(:receipt_verifier, :shared_secret)
+    Application.get_env(:receipt_verifier, :shared_secret, "")
   end
 end
