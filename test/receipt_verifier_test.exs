@@ -1,7 +1,6 @@
 defmodule ReceiptVerifierTest do
   use ExUnit.Case
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
-  doctest ReceiptVerifier
 
   setup_all do
     HTTPoison.start
@@ -15,7 +14,7 @@ defmodule ReceiptVerifierTest do
         |> File.read!
         |> String.replace("\n", "")
 
-      {:ok, receipt} = ReceiptVerifier.verify(base64_receipt)
+      {:ok, %ReceiptVerifier.Receipt{receipt: receipt}} = ReceiptVerifier.verify(base64_receipt)
 
       assert "1241", receipt["application_version"]
     end
@@ -30,9 +29,10 @@ defmodule ReceiptVerifierTest do
         |> File.read!
         |> String.replace("\n", "")
 
-      {:ok, receipt} = ReceiptVerifier.verify(base64_receipt)
+      {:ok, %ReceiptVerifier.Receipt{receipt: receipt, latest_receipt: latest_receipt, latest_receipt_info: _latest_receipt_info}} = ReceiptVerifier.verify(base64_receipt)
 
       assert "1241", receipt["application_version"]
+      assert latest_receipt
     end
   end
 end

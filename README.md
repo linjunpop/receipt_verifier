@@ -32,7 +32,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 > you can ignore this if you dont have auto-renewable product
 
-Follow [this guide](https://developer.apple.com/library/content/documentation/LanguagesUtilities/Conceptual/iTunesConnectInAppPurchase_Guide/Chapters/CreatingInAppPurchaseProducts.html#//apple_ref/doc/uid/TP40013727-CH3-SW2) to genrate shared secret, then config the `:receipt_verifier` application with:
+Follow [this guide](https://developer.apple.com/library/content/documentation/LanguagesUtilities/Conceptual/iTunesConnectInAppPurchase_Guide/Chapters/CreatingInAppPurchaseProducts.html#//apple_ref/doc/uid/TP40013727-CH3-SW2) to generate a shared secret, then config the `:receipt_verifier` application with:
 
 ```elixir
 use Mix.Config
@@ -44,7 +44,9 @@ config :receipt_verifier,
 ### Verify the receipt with the App Store
 
 ```elixir
-{:ok, receipt} = ReceiptVerifier.verify(base64_encoded_receipt_data)
+{:ok, result} = ReceiptVerifier.verify(base64_encoded_receipt_data)
+
+%ReceiptVerifier.Receipt{receipt: receipt, latest_receipt: latest_receipt, latest_receipt_info: latest_receipt_info} = result
 
 receipt = %{"adam_id" => 0, "app_item_id" => 0, "application_version" => "1241",
   "bundle_id" => "com.sumiapp.GridDiary", "download_id" => 0,
