@@ -2,9 +2,11 @@
 
 ## master
 
+## v0.2.0
+
 * Set latest_receipt_info's default to `[]`.
 
-## V0.1.0
+## v0.1.0
 
 * Support auto-renewable subscriptions.
 * Handle 503 Service Unavaliable.
