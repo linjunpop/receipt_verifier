@@ -31,4 +31,14 @@ defmodule ReceiptVerifierTest do
       assert latest_receipt
     end
   end
+
+  test "invalid receipt" do
+    use_cassette "invalid_receipt" do
+      base64_receipt = "foobar"
+
+      {:error, %ReceiptVerifier.Error{code: code, message: _}} = ReceiptVerifier.verify(base64_receipt)
+
+      assert 21002 == code
+    end
+  end
 end
