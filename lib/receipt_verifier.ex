@@ -46,8 +46,8 @@ defmodule ReceiptVerifier do
   alias ReceiptVerifier.Receipt
   alias ReceiptVerifier.Error
 
-  @production_url "https://buy.itunes.apple.com/verifyReceipt"
-  @sandbox_url "https://sandbox.itunes.apple.com/verifyReceipt"
+  @production_url 'https://buy.itunes.apple.com/verifyReceipt'
+  @sandbox_url 'https://sandbox.itunes.apple.com/verifyReceipt'
 
   @doc "Verify receipt with a specific server"
   @spec verify(binary, :prod | :test) :: {:ok, Receipt.t} | {:error, Error.t}
@@ -63,26 +63,22 @@ defmodule ReceiptVerifier do
   end
 
   defp do_request(receipt, url) do
-    case HTTPoison.post url, prepare_request_body(receipt), request_headers do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        data = Poison.decode!(body)
+    request_body = prepare_request_body(receipt)
+    content_type = 'application/json'
+    request_headers = [
+      {'Accept', 'application/json'}
+    ]
 
+    case :httpc.request(:post, {url, request_headers, content_type, request_body}, [], []) do
+      {:ok, {{_, 200, _}, _, body}} ->
+        data = Poison.decode!(body)
         case process_response(data) do
           {:retry, env} -> do_verify_receipt(receipt, env)
           any -> any
         end
-      {:ok, %HTTPoison.Response{status_code: 503}} ->
-        {:error, %Error{code: 503, message: "Service Unavailable"}}
       {:error, reason} ->
         {:error, reason}
     end
-  end
-
-  defp request_headers do
-    [
-      {"Accept", "application/json"},
-      {"Content-Type", "application/json"}
-    ]
   end
 
   defp prepare_request_body(receipt) do

@@ -30,4 +30,4 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :receipt_verifier,
-  shared_secret: "my-secret"
+  shared_secret: "sample-secret"

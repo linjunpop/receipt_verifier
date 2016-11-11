@@ -1,10 +1,6 @@
 defmodule ReceiptVerifierTest do
   use ExUnit.Case
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
-
-  setup_all do
-    HTTPoison.start
-  end
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   test "valid receipt" do
     use_cassette "receipt" do
