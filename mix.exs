@@ -30,7 +30,7 @@ defmodule ReceiptVerifier.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :inets]]
   end
 
   defp deps do
