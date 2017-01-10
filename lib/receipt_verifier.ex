@@ -63,7 +63,7 @@ defmodule ReceiptVerifier do
   end
 
   defp do_request(receipt, url) do
-    case HTTPoison.post url, prepare_request_body(receipt), request_headers do
+    case HTTPoison.post url, prepare_request_body(receipt), request_headers() do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         data = Poison.decode!(body)
 
@@ -88,7 +88,7 @@ defmodule ReceiptVerifier do
   defp prepare_request_body(receipt) do
     %{
       "receipt-data" => receipt,
-      "password" => load_password
+      "password" => load_password()
     } |> Poison.encode!
   end
 
