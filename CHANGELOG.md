@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.3.0
+
 * Support Elixir 1.4
 * Drop denpendency on `HTTPoison`, use `:httpc` instead.
 
