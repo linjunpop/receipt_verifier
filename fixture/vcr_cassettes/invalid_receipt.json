@@ -1,0 +1,51 @@
+[
+  {
+    "request": {
+      "body": "{\"receipt-data\":\"foobar\",\"password\":\"sample-secret\"}",
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "post",
+      "options": {
+        "httpc_options": [],
+        "http_options": []
+      },
+      "request_body": "",
+      "url": "https://buy.itunes.apple.com/verifyReceipt"
+    },
+    "response": {
+      "body": "{\"status\":21002}",
+      "headers": {
+        "cache-control": "private",
+        "connection": "keep-alive",
+        "date": "Fri, 11 Nov 2016 07:58:24 GMT",
+        "content-length": "16",
+        "expires": "Fri, 11 Nov 2016 07:58:24 GMT",
+        "x-apple-jingle-correlation-key": "DLGONGPSJLIWTKVCMD4L7YZPJI",
+        "x-apple-request-uuid": "1acce699-f24a-d169-aaa2-60f8bfe32f4a",
+        "pod": "38",
+        "x-apple-translated-wo-url": "/WebObjects/MZFinance.woa/wa/verifyReceipt",
+        "apple-tk": "false",
+        "edge-control": "no-store",
+        "x-apple-lokamai-no-cache": "true",
+        "itspod": "38",
+        "x-webobjects-loadaverage": "68",
+        "apple-seq": "0",
+        "apple-originating-system": "MZFinance",
+        "strict-transport-security": "max-age=31536000",
+        "x-frame-options": "SAMEORIGIN",
+        "x-apple-orig-url": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/verifyReceipt",
+        "x-apple-application-site": "NWK",
+        "set-cookie": "itspod=38; version=\"1\"; expires=Sun, 11-Dec-2016 07:58:24 GMT; path=/; domain=.apple.com",
+        "apple-timing-app": "6 ms",
+        "x-apple-application-instance": "382491"
+      },
+      "status_code": [
+        "HTTP/1.0",
+        200,
+        "Apple WebObjects"
+      ],
+      "type": "ok"
+    }
+  }
+]

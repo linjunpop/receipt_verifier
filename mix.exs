@@ -30,12 +30,11 @@ defmodule ReceiptVerifier.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison]]
+    [applications: [:logger, :inets]]
   end
 
   defp deps do
     [
-      {:httpoison, "~> 0.8.0 or 0.9.0"},
       {:poison, "~> 2.0 or ~> 3.0"},
 
       {:dialyxir, "~> 0.3", only: :dev},

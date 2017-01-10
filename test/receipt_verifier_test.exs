@@ -1,10 +1,6 @@
 defmodule ReceiptVerifierTest do
   use ExUnit.Case
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
-
-  setup_all do
-    HTTPoison.start
-  end
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   test "valid receipt" do
     use_cassette "receipt" do
@@ -33,6 +29,16 @@ defmodule ReceiptVerifierTest do
 
       assert "1241", receipt["application_version"]
       assert latest_receipt
+    end
+  end
+
+  test "invalid receipt" do
+    use_cassette "invalid_receipt" do
+      base64_receipt = "foobar"
+
+      {:error, %ReceiptVerifier.Error{code: code, message: _}} = ReceiptVerifier.verify(base64_receipt)
+
+      assert 21002 == code
     end
   end
 end
