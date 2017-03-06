@@ -39,6 +39,7 @@ defmodule ReceiptVerifier.Mixfile do
 
       {:dialyxir, "~> 0.3", only: :dev},
       {:exvcr, "~> 0.8", only: :test},
+      {:credo, "~> 0.5", only: [:dev, :test]},
 
       {:inch_ex, "~> 0.2", only: :docs},
       {:ex_doc, "~> 0.14", only: [:dev, :docs]}
