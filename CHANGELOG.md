@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.4.0
+
 * Handle error with code 21009.
 
 ## v0.3.0
