@@ -124,6 +124,11 @@ defmodule ReceiptVerifier do
     # Send it to the production environment instead.
     {:retry, :prod}
   end
+  defp process_response(%{"environment" => _, "exception" => message, "status" => 21_009}) do
+    # seems like an undocumented error by Apple
+    # http://stackoverflow.com/questions/37672420/ios-receipt-validation-status-code-21009-what-s-mzinappcacheaccessexception
+    {:error, %Error{code: 21_009, message: message}}
+  end
 
   defp load_password do
     Application.get_env(:receipt_verifier, :shared_secret, "")

@@ -2,6 +2,8 @@
 
 ## master
 
+* Handle error with code 21009.
+
 ## v0.3.0
 
 * Support Elixir 1.4
