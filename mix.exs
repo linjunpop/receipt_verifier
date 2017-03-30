@@ -37,12 +37,12 @@ defmodule ReceiptVerifier.Mixfile do
     [
       {:poison, "~> 2.0 or ~> 3.0"},
 
-      {:dialyxir, "~> 0.3", only: :dev},
+      {:dialyxir, "~> 0.5", only: :dev},
       {:exvcr, "~> 0.8", only: :test},
-      {:credo, "~> 0.5", only: [:dev, :test]},
+      {:credo, "~> 0.7", only: [:dev, :test]},
 
-      {:inch_ex, "~> 0.2", only: :docs},
-      {:ex_doc, "~> 0.14", only: [:dev, :docs]}
+      {:inch_ex, "~> 0.5", only: :docs},
+      {:ex_doc, "~> 0.15", only: [:dev, :docs]}
     ]
   end
 
