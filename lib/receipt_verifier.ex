@@ -83,9 +83,10 @@ defmodule ReceiptVerifier do
 
   defp prepare_request_body(receipt) do
     %{
-      "receipt-data" => receipt,
-      "password" => load_password()
-    } |> Poison.encode!
+      "receipt-data" => receipt
+    }
+    |> set_password()
+    |> Poison.encode!
   end
 
   defp process_response(%{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info}) do
@@ -130,7 +131,13 @@ defmodule ReceiptVerifier do
     {:error, %Error{code: 21_009, message: message}}
   end
 
-  defp load_password do
-    Application.get_env(:receipt_verifier, :shared_secret, "")
+  defp set_password(data) do
+    case Application.get_env(:receipt_verifier, :shared_secret) do
+      nil ->
+        data
+      shared_secret ->
+        data
+        |> Map.put("password", shared_secret)
+    end
   end
 end
