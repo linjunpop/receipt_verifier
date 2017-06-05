@@ -4,6 +4,7 @@ defmodule ReceiptVerifier.Client do
   """
 
   alias ReceiptVerifier.Error
+  alias Poison.Parser, as: PoisonParser
 
   @production "https://buy.itunes.apple.com/verifyReceipt"
   @sandbox "https://sandbox.itunes.apple.com/verifyReceipt"
@@ -12,8 +13,8 @@ defmodule ReceiptVerifier.Client do
   Send the iTunes receipt to Apple Store, and parse the response as map
 
   ## Example
-      iex> {:ok, receipt} = ReceiptVerifier.Client.reuqest(base64_encoded_receipt_data)
-      ...> receipt = %{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info}
+      iex> ReceiptVerifier.Client.reuqest(base64_encoded_receipt_data)
+      ...> {:ok, %{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info}}
 
   > Note: If you send sandbox receipt to production server, it will be auto resend to test server. Same for the production receipt.
   
@@ -22,7 +23,7 @@ defmodule ReceiptVerifier.Client do
   def request(receipt, endpoint \\ @production) do
     with(
       {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, endpoint),
-      {:ok, json} <- Poison.decode(body),
+      {:ok, json} <- PoisonParser.parse(body),
       :ok <- validate_env(json)
     ) do
       {:ok, json}

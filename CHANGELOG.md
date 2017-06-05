@@ -2,6 +2,9 @@
 
 ## master
 
+* Now receipts are parsed as `ReceiptVerifier.AppReceipt` and
+  `ReceiptVerifier.IAPReceipt` struct with essential fields,
+  instead of a giant Map struct.
 * Extract `ReceiptVerifier.Client` and `ReceiptVerifier.Parser` module.
 * Fixes `shared_secret` should be an optional config.
 * Drop support for Elixir 1.2. (`with ... else` is awesome)

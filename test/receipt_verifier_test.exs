@@ -2,6 +2,8 @@ defmodule ReceiptVerifierTest do
   use ExUnit.Case
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
+  alias ReceiptVerifier.ResponseData
+
   test "valid receipt" do
     use_cassette "receipt" do
       receipt_file_path = "test/fixtures/receipt"
@@ -10,9 +12,9 @@ defmodule ReceiptVerifierTest do
         |> File.read!
         |> String.replace("\n", "")
 
-      {:ok, %ReceiptVerifier.Receipt{receipt: receipt}} = ReceiptVerifier.verify(base64_receipt)
+      {:ok, %ResponseData{app_receipt: receipt}} = ReceiptVerifier.verify(base64_receipt)
 
-      assert "1241", receipt["application_version"]
+      assert "1241", receipt.application_version
     end
   end
 
@@ -25,10 +27,13 @@ defmodule ReceiptVerifierTest do
         |> File.read!
         |> String.replace("\n", "")
 
-      {:ok, %ReceiptVerifier.Receipt{receipt: receipt, latest_receipt: latest_receipt, latest_receipt_info: _latest_receipt_info}} = ReceiptVerifier.verify(base64_receipt)
+      {:ok, result} = ReceiptVerifier.verify(base64_receipt)
 
-      assert "1241", receipt["application_version"]
-      assert latest_receipt
+      %ResponseData{app_receipt: app_receipt, latest_iap_receipts: latest_iap_receipts} = result
+      latest_iap_receipt = List.last(latest_iap_receipts)
+
+      assert "1241", app_receipt.application_version
+      assert "com.sumiapp.GridDiary.pro_subscription", latest_iap_receipt.product_id
     end
   end
 
