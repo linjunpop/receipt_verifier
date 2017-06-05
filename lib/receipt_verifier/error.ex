@@ -11,7 +11,10 @@ defmodule ReceiptVerifier.Error do
       %ReceiptVerifier.Error{code: 21002, message: "The data in the receipt-data property was malformed or missing."}
   """
 
-  @type t :: %__MODULE__{code: integer, message: any}
+  @type t :: %__MODULE__{
+    code: integer,
+    message: any
+  }
 
   defstruct code: nil, message: ""
 end

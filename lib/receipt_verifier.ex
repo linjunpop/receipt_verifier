@@ -43,101 +43,21 @@ defmodule ReceiptVerifier do
   > Note: If you send sandbox receipt to production server, it will be auto resend to test server. Same for the production receipt.
   """
 
+  alias ReceiptVerifier.Client
+  alias ReceiptVerifier.Parser
   alias ReceiptVerifier.Receipt
   alias ReceiptVerifier.Error
 
-  @production_url 'https://buy.itunes.apple.com/verifyReceipt'
-  @sandbox_url 'https://sandbox.itunes.apple.com/verifyReceipt'
-
   @doc "Verify receipt with a specific server"
-  @spec verify(binary, :prod | :test) :: {:ok, Receipt.t} | {:error, Error.t}
-  def verify(receipt, env \\ :prod) when env in [:test, :prod] do
-    do_verify_receipt(receipt, env)
-  end
-
-  defp do_verify_receipt(receipt, :prod) do
-    do_request(receipt, @production_url)
-  end
-  defp do_verify_receipt(receipt, :test) do
-    do_request(receipt, @sandbox_url)
-  end
-
-  defp do_request(receipt, url) do
-    request_body = prepare_request_body(receipt)
-    content_type = 'application/json'
-    request_headers = [
-      {'Accept', 'application/json'}
-    ]
-
-    case :httpc.request(:post, {url, request_headers, content_type, request_body}, [], []) do
-      {:ok, {{_, 200, _}, _, body}} ->
-        data = Poison.decode!(body)
-        case process_response(data) do
-          {:retry, env} -> do_verify_receipt(receipt, env)
-          any -> any
-        end
-      {:error, reason} ->
-        {:error, reason}
-    end
-  end
-
-  defp prepare_request_body(receipt) do
-    %{
-      "receipt-data" => receipt
-    }
-    |> set_password()
-    |> Poison.encode!
-  end
-
-  defp process_response(%{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info}) do
-    {:ok, %Receipt{receipt: receipt, latest_receipt: latest_receipt, latest_receipt_info: latest_receipt_info}}
-  end
-  defp process_response(%{"status" => 0, "receipt" => receipt}) do
-    {:ok, %Receipt{receipt: receipt}}
-  end
-  defp process_response(%{"status" => 21_000}) do
-    {:error, %Error{code: 21_000, message: "The App Store could not read the JSON object you provided."}}
-  end
-  defp process_response(%{"status" => 21_002}) do
-    {:error, %Error{code: 21_002, message: "The data in the receipt-data property was malformed or missing."}}
-  end
-  defp process_response(%{"status" => 21_003}) do
-    {:error, %Error{code: 21_003, message: "The receipt could not be authenticated."}}
-  end
-  defp process_response(%{"status" => 21_004}) do
-    {:error, %Error{code: 21_004, message: "The shared secret you provided does not match the shared secret on file for your account."}}
-  end
-  defp process_response(%{"status" => 21_005}) do
-    {:error, %Error{code: 21_005, message: "The receipt server is not currently available."}}
-  end
-  defp process_response(%{"status" => 21_006, "receipt" => receipt}) do
-    {:error, %Error{code: 21_006, message: "This receipt is valid but the subscription has expired"}, receipt: receipt}
-  end
-  defp process_response(%{"status" => 21_007}) do
-    # This receipt is from the test environment,
-    # but it was sent to the production environment for verification.
-    # Send it to the test environment instead.
-    {:retry, :test}
-  end
-  defp process_response(%{"status" => 21_008}) do
-    # This receipt is from the production environment,
-    # but it was sent to the test environment for verification.
-    # Send it to the production environment instead.
-    {:retry, :prod}
-  end
-  defp process_response(%{"environment" => _, "exception" => message, "status" => 21_009}) do
-    # seems like an undocumented error by Apple
-    # http://stackoverflow.com/questions/37672420/ios-receipt-validation-status-code-21009-what-s-mzinappcacheaccessexception
-    {:error, %Error{code: 21_009, message: message}}
-  end
-
-  defp set_password(data) do
-    case Application.get_env(:receipt_verifier, :shared_secret) do
-      nil ->
-        data
-      shared_secret ->
-        data
-        |> Map.put("password", shared_secret)
+  @spec verify(String.t) :: {:ok, Receipt.t} | {:error, Error.t}
+  def verify(receipt) when is_binary(receipt) do
+    with(
+      {:ok, json} <- Client.request(receipt),
+      {:ok, data} <- Parser.parse(json)
+    ) do
+      {:ok, data}
+    else
+      any -> any
     end
   end
 end

@@ -43,7 +43,7 @@ config :receipt_verifier,
   shared_secret: "my-secret"
 ```
 
-### Verify the receipt with the App Store
+### Verify the receipt with the App Store server.
 
 ```elixir
 {:ok, result} = ReceiptVerifier.verify(base64_encoded_receipt_data)
@@ -88,7 +88,8 @@ receipt = %{"adam_id" => 0, "app_item_id" => 0, "application_version" => "1241",
 
 ### Error handling
 
-If there is error, `ReceiptVerifier.verify/1` will return `{:error, %ReceiptVerifier.Error{}}`.
+If there is error, `ReceiptVerifier.verify/1` 
+will return `{:error, %ReceiptVerifier.Error{code: code, message: msg}}`.
 
 An example:
 
