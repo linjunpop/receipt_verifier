@@ -4,6 +4,7 @@
 
 * Extract `ReceiptVerifier.Client` and `ReceiptVerifier.Parser` module.
 * Fixes `shared_secret` should be an optional config.
+* Drop support for Elixir 1.2. (`with ... else` is awesome)
 
 ## v0.4.0
 
