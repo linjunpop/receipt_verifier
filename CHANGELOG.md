@@ -2,6 +2,9 @@
 
 ## master
 
+* Extract `ReceiptVerifier.Client` and `ReceiptVerifier.Parser` module.
+* Fixes `shared_secret` should be an optional config.
+
 ## v0.4.0
 
 * Handle error with code 21009.
