@@ -63,6 +63,6 @@ defmodule ReceiptVerifier.IAPReceipt do
   defp format_datetime(datetime) do
     datetime
     |> String.to_integer
-    |> DateTime.from_unix!(:microsecond)
+    |> DateTime.from_unix!(:milliseconds)
   end
 end
