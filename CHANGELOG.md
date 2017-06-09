@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.5.0
+
 * Now receipts are parsed as `ReceiptVerifier.AppReceipt` and
   `ReceiptVerifier.IAPReceipt` struct with essential fields,
   instead of a giant Map struct.
