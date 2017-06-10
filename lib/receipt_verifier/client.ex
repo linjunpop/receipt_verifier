@@ -12,6 +12,12 @@ defmodule ReceiptVerifier.Client do
   @doc """
   Send the iTunes receipt to Apple Store, and parse the response as map
 
+  ## Options
+
+  - `exclude-old-transactions`
+    - `true`: only return latest transaction
+    - `false`: include all transactions (default)
+
   ## Example
       iex> ReceiptVerifier.Client.reuqest(base64_encoded_receipt_data)
       ...> {:ok, %{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info}}
@@ -19,10 +25,10 @@ defmodule ReceiptVerifier.Client do
   > Note: If you send sandbox receipt to production server, it will be auto resend to test server. Same for the production receipt.
   
   """
-  @spec request(String.t, String.t) :: {:ok, map} | {:error, any}
-  def request(receipt, endpoint \\ @production) do
+  @spec request(String.t, keyword, String.t) :: {:ok, map} | {:error, any}
+  def request(receipt, opts, endpoint \\ @production) do
     with(
-      {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, endpoint),
+      {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, opts, endpoint),
       {:ok, json} <- PoisonParser.parse(body),
       :ok <- validate_env(json)
     ) do
@@ -35,7 +41,7 @@ defmodule ReceiptVerifier.Client do
         # Poison error
         {:error, %Error{code: 502, message: "The response from Apple's Server is malformed: #{msg}"}}
       {:retry, endpoint} ->
-        request(receipt, endpoint)
+        request(receipt, opts, endpoint)
       {:error, reason} ->
         {:error, reason}
     end
@@ -57,13 +63,20 @@ defmodule ReceiptVerifier.Client do
     :ok
   end
 
-  defp do_request(receipt, url) do
-    url = String.to_charlist(url)
+  defp do_request(receipt, opts, url) do
     request_body = prepare_request_body(receipt)
     content_type = 'application/json'
     request_headers = [
       {'Accept', 'application/json'}
     ]
+
+    url =
+      if Keyword.get(opts, :exclude_old_transactions) do
+        url <> "?exclude_old_transactions=true"
+      else
+        url
+      end
+      |> String.to_charlist()
 
     :httpc.request(:post, {url, request_headers, content_type, request_body}, [], [])
   end
