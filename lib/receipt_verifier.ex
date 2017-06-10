@@ -52,10 +52,10 @@ defmodule ReceiptVerifier do
   alias ReceiptVerifier.Error
 
   @doc "Verify receipt with a specific server"
-  @spec verify(String.t) :: {:ok, Receipt.t} | {:error, Error.t}
-  def verify(receipt) when is_binary(receipt) do
+  @spec verify(String.t, boolean) :: {:ok, Receipt.t} | {:error, Error.t}
+  def verify(receipt, exclude_old_transactions \\ false) when is_binary(receipt) do
     with(
-      {:ok, json} <- Client.request(receipt),
+      {:ok, json} <- Client.request(receipt, [exclude_old_transactions: exclude_old_transactions]),
       {:ok, data} <- Parser.parse_response(json)
     ) do
       {:ok, data}
