@@ -101,4 +101,7 @@ defmodule ReceiptVerifier.Parser do
     # http://stackoverflow.com/questions/37672420/ios-receipt-validation-status-code-21009-what-s-mzinappcacheaccessexception
     {:error, %Error{code: 21_009, message: message}}
   end
+  def parse_response(%{"status" => status}) when status in 21100..21199 do
+    {:error, %Error{code: status, message: "Internal data access error"}}
+  end
 end
