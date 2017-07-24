@@ -6,21 +6,19 @@ defmodule ReceiptVerifier.Client do
   alias ReceiptVerifier.Error
   alias Poison.Parser, as: JSONParser
 
-  @production "https://buy.itunes.apple.com/verifyReceipt"
-  @sandbox "https://sandbox.itunes.apple.com/verifyReceipt"
+  @endpoints [
+    production: 'https://buy.itunes.apple.com/verifyReceipt',
+    sandbox: 'https://sandbox.itunes.apple.com/verifyReceipt'
+  ]
 
   @doc """
   Send the iTunes receipt to Apple Store, and parse the response as map
-
-  > Note: If you send sandbox receipt to production server, it will be re-sent 
-  to test server. Same for the production receipt.
   """
-  @spec request(String.t, String.t) :: {:ok, map} | {:error, any}
-  def request(receipt, endpoint \\ @production) do
+  @spec request(String.t, atom) :: {:ok, map} | {:error, any}
+  def request(receipt, env \\ :production) do
     with(
-      {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, endpoint),
-      {:ok, json} <- JSONParser.parse(body),
-      :ok <- validate_env(json)
+      {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, env),
+      {:ok, json} <- JSONParser.parse(body)
     ) do
       {:ok, json}
     else
@@ -30,31 +28,14 @@ defmodule ReceiptVerifier.Client do
       {:error, {:invalid, msg}} ->
         # Poison error
         {:error, %Error{code: 502, message: "The response from Apple's Server is malformed: #{msg}"}}
-      {:retry, endpoint} ->
-        request(receipt, endpoint)
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  defp validate_env(%{"status" => 21_007}) do
-    # This receipt is from the test environment,
-    # but it was sent to the production environment for verification.
-    # Send it to the test environment instead.
-    {:retry, @sandbox}
-  end
-  defp validate_env(%{"status" => 21_008}) do
-    # This receipt is from the production environment,
-    # but it was sent to the test environment for verification.
-    # Send it to the production environment instead.
-    {:retry, @production}
-  end
-  defp validate_env(_) do
-    :ok
-  end
+  defp do_request(receipt, env) do
+    url = get_endpoint_url(env)
 
-  defp do_request(receipt, url) do
-    url = String.to_charlist(url)
     request_body = prepare_request_body(receipt)
     content_type = 'application/json'
     request_headers = [
@@ -62,6 +43,11 @@ defmodule ReceiptVerifier.Client do
     ]
 
     :httpc.request(:post, {url, request_headers, content_type, request_body}, [], [])
+  end
+
+  defp get_endpoint_url(env) when env in [:sandbox, :production] do
+    @endpoints
+    |> Keyword.get(env)
   end
 
   defp prepare_request_body(receipt) do

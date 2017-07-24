@@ -93,18 +93,18 @@ defmodule ReceiptVerifier.Parser do
   def parse_response(%{"status" => 21_006, "receipt" => _receipt}) do
     {:error, %Error{code: 21_006, message: "This receipt is valid but the subscription has expired"}}
   end
-  # def parse_response(%{"status" => 21_007}) do
-  #   # This receipt is from the test environment,
-  #   # but it was sent to the production environment for verification.
-  #   # Send it to the test environment instead.
-  #   {:retry, :test}
-  # end
-  # def parse_response(%{"status" => 21_008}) do
-  #   # This receipt is from the production environment,
-  #   # but it was sent to the test environment for verification.
-  #   # Send it to the production environment instead.
-  #   {:retry, :prod}
-  # end
+  def parse_response(%{"status" => 21_007}) do
+    # This receipt is from the test environment,
+    # but it was sent to the production environment for verification.
+    # Send it to the test environment instead.
+    {:retry, :sandbox}
+  end
+  def parse_response(%{"status" => 21_008}) do
+    # This receipt is from the production environment,
+    # but it was sent to the test environment for verification.
+    # Send it to the production environment instead.
+    {:retry, :production}
+  end
   def parse_response(%{"status" => 21_009, "environment" => _, "exception" => message}) do
     # seems like an undocumented error by Apple
     # http://stackoverflow.com/questions/37672420/ios-receipt-validation-status-code-21009-what-s-mzinappcacheaccessexception
