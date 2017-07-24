@@ -94,16 +94,10 @@ defmodule ReceiptVerifier.Parser do
     {:error, %Error{code: 21_006, message: "This receipt is valid but the subscription has expired"}}
   end
   def parse_response(%{"status" => 21_007}) do
-    # This receipt is from the test environment,
-    # but it was sent to the production environment for verification.
-    # Send it to the test environment instead.
-    {:retry, :sandbox}
+    {:error, %Error{code: 21_007, message: "This receipt is from the test environment, but sent to production environment"}}
   end
   def parse_response(%{"status" => 21_008}) do
-    # This receipt is from the production environment,
-    # but it was sent to the test environment for verification.
-    # Send it to the production environment instead.
-    {:retry, :production}
+    {:error, %Error{code: 21_008, message: "This receipt is from the production environment, but sent to test environment"}}
   end
   def parse_response(%{"status" => 21_009, "environment" => _, "exception" => message}) do
     # seems like an undocumented error by Apple

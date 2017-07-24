@@ -60,7 +60,7 @@ defmodule ReceiptVerifier do
       - `:sandbox` - the sandbox environment
     - `exclude_old_transactions` - Exclude the old transactions
 
-  > Note: If you send sandbox receipt to production server, it will be re-sent 
+  > Note: If you send sandbox receipt to production server, it will be re-sent
   to test server. Same for the production receipt.
   """
   @spec verify(String.t, Client.options) :: {:ok, ResponseData.t} | {:error, Error.t}
@@ -71,9 +71,11 @@ defmodule ReceiptVerifier do
     ) do
       {:ok, data}
     else
-      {:retry, env} ->
-        verify(receipt, env: env)
-      any -> any
+      {:error, %Error{code: 21_007}} ->
+        verify(receipt, env: :sandbox)
+      {:error, %Error{code: 21_008}} ->
+        verify(receipt, env: :production)
+      {:error, reason} -> {:error, reason}
     end
   end
 end
