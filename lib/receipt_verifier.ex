@@ -48,29 +48,31 @@ defmodule ReceiptVerifier do
 
   alias ReceiptVerifier.Client
   alias ReceiptVerifier.Parser
-  alias ReceiptVerifier.Receipt
+  alias ReceiptVerifier.ResponseData
   alias ReceiptVerifier.Error
 
   @doc """
   Verify receipt in the env
 
-  - `env`
-    - `:production` - the production environment, default
-    - `:sandbox` - the sandbox environment
+  - `opts`
+    - `env` - The environment
+      - `:production` - the production environment, default
+      - `:sandbox` - the sandbox environment
+    - `exclude_old_transactions` - Exclude the old transactions
 
   > Note: If you send sandbox receipt to production server, it will be re-sent 
   to test server. Same for the production receipt.
   """
-  @spec verify(String.t, atom) :: {:ok, Receipt.t} | {:error, Error.t}
-  def verify(receipt, env \\ :production) when is_binary(receipt) do
+  @spec verify(String.t, Client.options) :: {:ok, ResponseData.t} | {:error, Error.t}
+  def verify(receipt, opts \\ []) when is_binary(receipt) do
     with(
-      {:ok, json} <- Client.request(receipt, env),
+      {:ok, json} <- Client.request(receipt, opts),
       {:ok, data} <- Parser.parse_response(json)
     ) do
       {:ok, data}
     else
       {:retry, env} ->
-        verify(receipt, env)
+        verify(receipt, env: env)
       any -> any
     end
   end

@@ -38,6 +38,7 @@ defmodule ReceiptVerifierTest do
         %ResponseData{app_receipt: app_receipt, latest_iap_receipts: latest_iap_receipts} = result
         latest_iap_receipt = List.last(latest_iap_receipts)
 
+        assert 120 == length(latest_iap_receipts)
         assert "1241", app_receipt.application_version
         assert "com.sumiapp.GridDiary.pro_subscription", latest_iap_receipt.product_id
       end
@@ -54,6 +55,16 @@ defmodule ReceiptVerifierTest do
 
         assert false == pending_renewal_receipt.is_in_billing_retry_period
         assert "com.sumiapp.GridDiary.pro_subscription" == pending_renewal_receipt.auto_renew_product_id
+      end
+    end
+
+    test "exclude old iap receipts" do
+      use_cassette "exclude_old_transactions" do
+        base64_receipt = read_receipt_file("auto_renewable_receipt")
+
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: false)
+
+        assert 120 < length(result.latest_iap_receipts)
       end
     end
   end
