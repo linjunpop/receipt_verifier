@@ -8,7 +8,9 @@ defmodule ReceiptVerifier.Error do
 
   ## Example
 
-      %ReceiptVerifier.Error{code: 21002, message: "The data in the receipt-data property was malformed or missing."}
+  ```elixir
+  %ReceiptVerifier.Error{code: 21002, message: "The data in the receipt-data property was malformed or missing."}
+  ```
   """
 
   @type t :: %__MODULE__{

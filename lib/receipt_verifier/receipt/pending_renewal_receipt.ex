@@ -1,15 +1,6 @@
 defmodule ReceiptVerifier.PendingRenewalReceipt do
   @moduledoc """
-  The struct to represent the pending renewal info
-
-  Example JSON data:
-  %{
-    "auto_renew_product_id" => "com.sumiapp.GridDiary.pro.subscription",
-    "auto_renew_status" => "0",
-    "expiration_intent" => "1",
-    "is_in_billing_retry_period" => "0",
-    "product_id" => "com.sumiapp.GridDiary.pro.subscription"
-  }
+  The struct to represent the Pending Renewal Receipt
   """
 
   @type t :: %__MODULE__{
@@ -28,13 +19,22 @@ defmodule ReceiptVerifier.PendingRenewalReceipt do
     :product_id
   ]
 
-  def parse(auto_renewal_infos) when is_list(auto_renewal_infos)do
-    auto_renewal_infos
-    |> Enum.map(&parse/1)
-  end
-  def parse(auto_renewal_info) when is_map(auto_renewal_info) do
+  @doc """
+  Parse the Pending Renewal Receipt, returns the parsed struct
+
+  ## Example
+  ```elixir
+  iex> ReceiptVerifier.PendingRenewalReceipt.parse(data)
+  ...> %ReceiptVerifier.PendingRenewalReceipt{auto_renew_product_id: "com.sumiapp.GridDiary.pro_subscription",
+   auto_renew_status: "0", expiration_intent: "1",
+   is_in_billing_retry_period: false,
+   product_id: "com.sumiapp.GridDiary.pro_subscription"}
+  ```
+  """
+  @spec parse(map) :: t
+  def parse(data) when is_map(data) do
     attrs =
-      auto_renewal_info
+      data
       |> Enum.map(&do_parse_field/1)
 
     struct(__MODULE__, attrs)

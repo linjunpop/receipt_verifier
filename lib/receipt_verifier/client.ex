@@ -12,12 +12,8 @@ defmodule ReceiptVerifier.Client do
   @doc """
   Send the iTunes receipt to Apple Store, and parse the response as map
 
-  ## Example
-      iex> ReceiptVerifier.Client.reuqest(base64_encoded_receipt_data)
-      ...> {:ok, %{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info}}
-
-  > Note: If you send sandbox receipt to production server, it will be auto resend to test server. Same for the production receipt.
-  
+  > Note: If you send sandbox receipt to production server, it will be re-sent 
+  to test server. Same for the production receipt.
   """
   @spec request(String.t, String.t) :: {:ok, map} | {:error, any}
   def request(receipt, endpoint \\ @production) do
