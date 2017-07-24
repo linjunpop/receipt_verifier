@@ -1,6 +1,8 @@
 defmodule ReceiptVerifier.PendingRenewalReceipt do
   @moduledoc """
   The struct to represent the Pending Renewal Receipt
+
+  A pending renewal may refer to a renewal that is scheduled in the future or a renewal that failed in the past for some reason.
   """
 
   @type t :: %__MODULE__{
