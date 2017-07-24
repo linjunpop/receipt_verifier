@@ -4,46 +4,76 @@ defmodule ReceiptVerifierTest do
 
   alias ReceiptVerifier.ResponseData
 
-  test "valid receipt" do
-    use_cassette "receipt" do
-      receipt_file_path = "test/fixtures/receipt"
-      base64_receipt =
-        receipt_file_path
-        |> File.read!
-        |> String.replace("\n", "")
+  describe "receipt" do
+    test "valid receipt" do
+      use_cassette "receipt" do
+        base64_receipt = read_receipt_file("receipt")
 
-      {:ok, %ResponseData{app_receipt: receipt}} = ReceiptVerifier.verify(base64_receipt)
+        {:ok, %ResponseData{app_receipt: receipt}} = ReceiptVerifier.verify(base64_receipt)
 
-      assert "1241", receipt.application_version
+        assert "1241", receipt.application_version
+      end
     end
   end
 
-  test "valid auto renewable receipt" do
-    use_cassette "auto_renewable_receipt" do
-      receipt_file_path = "test/fixtures/auto_renewable_receipt"
+  describe "auto-renewable receipt" do
+    test "app receipt" do
+      use_cassette "auto_renewable_receipt" do
+        base64_receipt = read_receipt_file("auto_renewable_receipt")
 
-      base64_receipt =
-        receipt_file_path
-        |> File.read!
-        |> String.replace("\n", "")
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt)
 
-      {:ok, result} = ReceiptVerifier.verify(base64_receipt)
+        %ResponseData{app_receipt: app_receipt} = result
 
-      %ResponseData{app_receipt: app_receipt, latest_iap_receipts: latest_iap_receipts} = result
-      latest_iap_receipt = List.last(latest_iap_receipts)
+        assert "1241", app_receipt.application_version
+      end
+    end
 
-      assert "1241", app_receipt.application_version
-      assert "com.sumiapp.GridDiary.pro_subscription", latest_iap_receipt.product_id
+    test "latest iap receipt" do
+      use_cassette "auto_renewable_receipt" do
+        base64_receipt = read_receipt_file("auto_renewable_receipt")
+
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt)
+
+        %ResponseData{app_receipt: app_receipt, latest_iap_receipts: latest_iap_receipts} = result
+        latest_iap_receipt = List.last(latest_iap_receipts)
+
+        assert "1241", app_receipt.application_version
+        assert "com.sumiapp.GridDiary.pro_subscription", latest_iap_receipt.product_id
+      end
+    end
+
+    test "pending renewal receipt" do
+      use_cassette "auto_renewable_receipt" do
+        base64_receipt = read_receipt_file("auto_renewable_receipt")
+
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt)
+
+        %ResponseData{pending_renewal_receipts: pending_renewal_receipts} = result
+        pending_renewal_receipt = List.last(pending_renewal_receipts)
+
+        assert false == pending_renewal_receipt.is_in_billing_retry_period
+        assert "com.sumiapp.GridDiary.pro_subscription" == pending_renewal_receipt.auto_renew_product_id
+      end
     end
   end
 
-  test "invalid receipt" do
-    use_cassette "invalid_receipt" do
-      base64_receipt = "foobar"
+  describe "invalid receipt" do
+    test "malformed receipt data" do
+      use_cassette "invalid_receipt" do
+        base64_receipt = "foobar"
 
-      {:error, %ReceiptVerifier.Error{code: code, message: _}} = ReceiptVerifier.verify(base64_receipt)
+        {:error, %ReceiptVerifier.Error{code: code, message: msg}} = ReceiptVerifier.verify(base64_receipt)
 
-      assert 21002 == code
+        assert 21002 == code
+        assert "The data in the receipt-data property was malformed or missing." == msg
+      end
     end
+  end
+
+  defp read_receipt_file(filename) do
+    "test/fixtures/#{filename}"
+    |> File.read!
+    |> String.replace("\n", "")
   end
 end

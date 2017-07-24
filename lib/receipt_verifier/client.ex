@@ -4,7 +4,7 @@ defmodule ReceiptVerifier.Client do
   """
 
   alias ReceiptVerifier.Error
-  alias Poison.Parser, as: PoisonParser
+  alias Poison.Parser, as: JSONParser
 
   @production "https://buy.itunes.apple.com/verifyReceipt"
   @sandbox "https://sandbox.itunes.apple.com/verifyReceipt"
@@ -23,7 +23,7 @@ defmodule ReceiptVerifier.Client do
   def request(receipt, endpoint \\ @production) do
     with(
       {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, endpoint),
-      {:ok, json} <- PoisonParser.parse(body),
+      {:ok, json} <- JSONParser.parse(body),
       :ok <- validate_env(json)
     ) do
       {:ok, json}

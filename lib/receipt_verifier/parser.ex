@@ -6,6 +6,7 @@ defmodule ReceiptVerifier.Parser do
   alias ReceiptVerifier.ResponseData
   alias ReceiptVerifier.AppReceipt
   alias ReceiptVerifier.IAPReceipt
+  alias ReceiptVerifier.PendingRenewalReceipt
   alias ReceiptVerifier.Error
 
   @doc """
@@ -53,13 +54,15 @@ defmodule ReceiptVerifier.Parser do
        latest_iap_receipts: []}
   """
   @spec parse_response(map()) :: {:ok, ResponseData.t} | {:error, Error.t}
-  def parse_response(%{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info}) do
+  def parse_response(%{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info} = data) do
     {
       :ok,
       %ResponseData{
         app_receipt: AppReceipt.parse(receipt),
         base64_latest_app_receipt: latest_receipt,
-        latest_iap_receipts: IAPReceipt.parse(latest_receipt_info)
+        latest_iap_receipts: IAPReceipt.parse(latest_receipt_info),
+        latest_expired_receipt: parse_latest_expired_receipt_info(data),
+        pending_renewal_receipts: parse_pending_renewal_info(data)
       }
     }
   end
@@ -104,4 +107,16 @@ defmodule ReceiptVerifier.Parser do
   def parse_response(%{"status" => status}) when status in 21100..21199 do
     {:error, %Error{code: status, message: "Internal data access error"}}
   end
+
+  defp parse_pending_renewal_info(%{"pending_renewal_info" => pending_renewal_info}) do
+    pending_renewal_info
+    |> Enum.map(&PendingRenewalReceipt.parse/1)
+  end
+  defp parse_pending_renewal_info(_), do: []
+
+  defp parse_latest_expired_receipt_info(%{"latest_expired_receipt_info" => latest_expired_receipt_info}) do
+    latest_expired_receipt_info
+    |> IAPReceipt.parse()
+  end
+  defp parse_latest_expired_receipt_info(_), do: nil
 end
