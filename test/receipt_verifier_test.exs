@@ -1,8 +1,13 @@
 defmodule ReceiptVerifierTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   alias ReceiptVerifier.ResponseData
+
+  setup_all do
+    ExVCR.Config.cassette_library_dir("test/fixtures/vcr_cassettes")
+    :ok
+  end
 
   describe "receipt" do
     test "valid receipt" do
@@ -60,9 +65,9 @@ defmodule ReceiptVerifierTest do
 
     test "exclude old iap receipts" do
       use_cassette "exclude_old_transactions" do
-        base64_receipt = read_receipt_file("auto_renewable_receipt")
+        base64_receipt = read_receipt_file("gridnote")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: false)
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: true)
 
         assert 120 < length(result.latest_iap_receipts)
       end
@@ -83,7 +88,7 @@ defmodule ReceiptVerifierTest do
   end
 
   defp read_receipt_file(filename) do
-    "test/fixtures/#{filename}"
+    "test/fixtures/receipts/#{filename}"
     |> File.read!
     |> String.replace("\n", "")
   end
