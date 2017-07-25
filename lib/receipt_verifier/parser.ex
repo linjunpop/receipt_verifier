@@ -63,7 +63,6 @@ defmodule ReceiptVerifier.Parser do
         app_receipt: AppReceipt.parse(receipt),
         base64_latest_app_receipt: latest_receipt,
         latest_iap_receipts: parse_latest_iap_receipts(data),
-        latest_expired_receipt: parse_latest_expired_receipt_info(data),
         pending_renewal_receipts: parse_pending_renewal_info(data)
       }
     }
@@ -122,10 +121,4 @@ defmodule ReceiptVerifier.Parser do
     |> Enum.map(&PendingRenewalReceipt.parse/1)
   end
   defp parse_pending_renewal_info(_), do: []
-
-  defp parse_latest_expired_receipt_info(%{"latest_expired_receipt_info" => latest_expired_receipt_info}) do
-    latest_expired_receipt_info
-    |> IAPReceipt.parse()
-  end
-  defp parse_latest_expired_receipt_info(_), do: nil
 end
