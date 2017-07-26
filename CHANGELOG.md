@@ -2,6 +2,12 @@
 
 ## master
 
+* Change `ReceiptVerifier.verify/1` to `ReceiptVerifier.verify/2` which accepts
+  an optional `ReceiptVerifier.Client.options`.
+* Support the new `exclude_old_transactions`
+* Handle the new `21100-21199` Status
+* Parse the new `pending_renewal_info` as `ReceiptVerifier.PendingRenewalReceipt`
+
 ## v0.5.0
 
 * Now receipts are parsed as `ReceiptVerifier.AppReceipt` and
