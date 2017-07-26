@@ -62,14 +62,26 @@ defmodule ReceiptVerifierTest do
         assert "com.sumiapp.GridDiary.pro_subscription" == pending_renewal_receipt.auto_renew_product_id
       end
     end
+  end
 
-    test "exclude old iap receipts" do
+  describe "exclude old iap receipts" do
+    test "dont exclude transactions" do
+      use_cassette "exclude_old_transactions_false" do
+        base64_receipt = read_receipt_file("griddiary_production")
+
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: false)
+
+        assert 3 == length(result.latest_iap_receipts)
+      end
+    end
+
+    test "will exclude old transactions" do
       use_cassette "exclude_old_transactions" do
-        base64_receipt = read_receipt_file("gridnote")
+        base64_receipt = read_receipt_file("griddiary_production")
 
         {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: true)
 
-        assert 120 < length(result.latest_iap_receipts)
+        assert 1 == length(result.latest_iap_receipts)
       end
     end
   end
