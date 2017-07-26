@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.6.0
+
 * Change `ReceiptVerifier.verify/1` to `ReceiptVerifier.verify/2` which accepts
   an optional `ReceiptVerifier.Client.options`.
 * Use `ReceiptVerifier.verify(receipt, exclude_old_transactions: true)` to make
