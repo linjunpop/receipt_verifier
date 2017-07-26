@@ -4,27 +4,26 @@ defmodule ReceiptVerifier.Client do
   """
 
   alias ReceiptVerifier.Error
-  alias Poison.Parser, as: PoisonParser
+  alias Poison.Parser, as: JSONParser
 
-  @production "https://buy.itunes.apple.com/verifyReceipt"
-  @sandbox "https://sandbox.itunes.apple.com/verifyReceipt"
+  @type options :: [
+    env: :production | :sandbox,
+    exclude_old_transactions: boolean()
+  ]
+
+  @endpoints [
+    production: 'https://buy.itunes.apple.com/verifyReceipt',
+    sandbox: 'https://sandbox.itunes.apple.com/verifyReceipt'
+  ]
 
   @doc """
   Send the iTunes receipt to Apple Store, and parse the response as map
-
-  ## Example
-      iex> ReceiptVerifier.Client.reuqest(base64_encoded_receipt_data)
-      ...> {:ok, %{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt, "latest_receipt_info" => latest_receipt_info}}
-
-  > Note: If you send sandbox receipt to production server, it will be auto resend to test server. Same for the production receipt.
-  
   """
-  @spec request(String.t, String.t) :: {:ok, map} | {:error, any}
-  def request(receipt, endpoint \\ @production) do
+  @spec request(String.t, options) :: {:ok, map} | {:error, any}
+  def request(receipt, opts \\ []) do
     with(
-      {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, endpoint),
-      {:ok, json} <- PoisonParser.parse(body),
-      :ok <- validate_env(json)
+      {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, opts),
+      {:ok, json} <- JSONParser.parse(body)
     ) do
       {:ok, json}
     else
@@ -34,32 +33,16 @@ defmodule ReceiptVerifier.Client do
       {:error, {:invalid, msg}} ->
         # Poison error
         {:error, %Error{code: 502, message: "The response from Apple's Server is malformed: #{msg}"}}
-      {:retry, endpoint} ->
-        request(receipt, endpoint)
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  defp validate_env(%{"status" => 21_007}) do
-    # This receipt is from the test environment,
-    # but it was sent to the production environment for verification.
-    # Send it to the test environment instead.
-    {:retry, @sandbox}
-  end
-  defp validate_env(%{"status" => 21_008}) do
-    # This receipt is from the production environment,
-    # but it was sent to the test environment for verification.
-    # Send it to the production environment instead.
-    {:retry, @production}
-  end
-  defp validate_env(_) do
-    :ok
-  end
+  defp do_request(receipt, opts) do
+    env = Keyword.get(opts, :env, :production)
+    url = get_endpoint_url(env)
 
-  defp do_request(receipt, url) do
-    url = String.to_charlist(url)
-    request_body = prepare_request_body(receipt)
+    request_body = prepare_request_body(receipt, opts)
     content_type = 'application/json'
     request_headers = [
       {'Accept', 'application/json'}
@@ -68,21 +51,37 @@ defmodule ReceiptVerifier.Client do
     :httpc.request(:post, {url, request_headers, content_type, request_body}, [], [])
   end
 
-  defp prepare_request_body(receipt) do
+  defp get_endpoint_url(env) when env in [:sandbox, :production] do
+    @endpoints
+    |> Keyword.get(env)
+  end
+
+  defp prepare_request_body(receipt, opts) do
     %{
       "receipt-data" => receipt
     }
-    |> set_password()
+    |> maybe_set_password()
+    |> maybe_set_exclude_old_transactions(opts)
     |> Poison.encode!
   end
 
-  defp set_password(data) do
+  defp maybe_set_password(data) do
     case Application.get_env(:receipt_verifier, :shared_secret) do
       nil ->
         data
       shared_secret ->
         data
         |> Map.put("password", shared_secret)
+    end
+  end
+
+  defp maybe_set_exclude_old_transactions(data, opts) do
+    case Keyword.get(opts, :exclude_old_transactions) do
+      nil ->
+        data
+      exclude_old_transactions ->
+        data
+        |> Map.put("exclude-old-transactions", exclude_old_transactions)
     end
   end
 end

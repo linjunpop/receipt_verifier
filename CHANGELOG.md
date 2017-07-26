@@ -2,6 +2,13 @@
 
 ## master
 
+* Change `ReceiptVerifier.verify/1` to `ReceiptVerifier.verify/2` which accepts
+  an optional `ReceiptVerifier.Client.options`.
+* Use `ReceiptVerifier.verify(receipt, exclude_old_transactions: true)` to make
+  the `:latest_iap_receipts` in response data only contains the latest item.
+* Returns error for the new `21100-21199 Internal data access error`.
+* Added new field `:pending_renewal_receipts` to `ReceiptVerifier.ResponseData`
+
 ## v0.5.0
 
 * Now receipts are parsed as `ReceiptVerifier.AppReceipt` and

@@ -27,14 +27,32 @@ defmodule ReceiptVerifier.IAPReceipt do
     :expires_date,
   ]
 
-  @spec parse(map | list(map)) :: t
-  def parse(receipts) when is_list(receipts) do
-    receipts
-    |> Enum.map(&parse/1)
-  end
-  def parse(receipt) when is_map(receipt) do
+  @doc """
+  Parse the IAP Receipt, returns the parsed struct
+
+  ## Example
+  ```elixir
+  iex> ReceiptVerifier.IAPReceipt.parse(data)
+  ...> %ReceiptVerifier.IAPReceipt{expires_date: %DateTime{calendar: Calendar.ISO,
+    day: 5, hour: 7, microsecond: {0, 3}, minute: 6, month: 1, second: 6,
+    std_offset: 0, time_zone: "Etc/UTC", utc_offset: 0, year: 2017,
+    zone_abbr: "UTC"}, is_trial_period: false,
+   original_purchase_date: %DateTime{calendar: Calendar.ISO, day: 6, hour: 1,
+    microsecond: {0, 3}, minute: 38, month: 12, second: 52, std_offset: 0,
+    time_zone: "Etc/UTC", utc_offset: 0, year: 2016, zone_abbr: "UTC"},
+   original_transaction_id: "1000000256351830",
+   product_id: "com.sumiapp.GridDiary.pro_subscription",
+   purchase_date: %DateTime{calendar: Calendar.ISO, day: 5, hour: 7,
+    microsecond: {0, 3}, minute: 1, month: 1, second: 6, std_offset: 0,
+    time_zone: "Etc/UTC", utc_offset: 0, year: 2017, zone_abbr: "UTC"},
+   quantity: 1, transaction_id: "1000000262887838",
+   web_order_line_item_id: "1000000034053495"}
+  ```
+  """
+  @spec parse(map) :: t
+  def parse(data) when is_map(data) do
     attrs =
-      receipt
+      data
       |> Enum.map(&do_parse_field/1)
 
     struct(__MODULE__, attrs)

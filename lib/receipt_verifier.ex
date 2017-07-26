@@ -48,19 +48,34 @@ defmodule ReceiptVerifier do
 
   alias ReceiptVerifier.Client
   alias ReceiptVerifier.Parser
-  alias ReceiptVerifier.Receipt
+  alias ReceiptVerifier.ResponseData
   alias ReceiptVerifier.Error
 
-  @doc "Verify receipt with a specific server"
-  @spec verify(String.t) :: {:ok, Receipt.t} | {:error, Error.t}
-  def verify(receipt) when is_binary(receipt) do
+  @doc """
+  Verify receipt in the env
+
+  - `opts`
+    - `env` - The environment
+      - `:production` - the production environment, default
+      - `:sandbox` - the sandbox environment
+    - `exclude_old_transactions` - Exclude the old transactions
+
+  > Note: If you send sandbox receipt to production server, it will be re-sent
+  to test server. Same for the production receipt.
+  """
+  @spec verify(String.t, Client.options) :: {:ok, ResponseData.t} | {:error, Error.t}
+  def verify(receipt, opts \\ []) when is_binary(receipt) do
     with(
-      {:ok, json} <- Client.request(receipt),
+      {:ok, json} <- Client.request(receipt, opts),
       {:ok, data} <- Parser.parse_response(json)
     ) do
       {:ok, data}
     else
-      any -> any
+      {:error, %Error{code: 21_007}} ->
+        verify(receipt, env: :sandbox)
+      {:error, %Error{code: 21_008}} ->
+        verify(receipt, env: :production)
+      {:error, reason} -> {:error, reason}
     end
   end
 end
