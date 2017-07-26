@@ -4,9 +4,10 @@
 
 * Change `ReceiptVerifier.verify/1` to `ReceiptVerifier.verify/2` which accepts
   an optional `ReceiptVerifier.Client.options`.
-* Support the new `exclude_old_transactions`
-* Handle the new `21100-21199` Status
-* Parse the new `pending_renewal_info` as `ReceiptVerifier.PendingRenewalReceipt`
+* Use `ReceiptVerifier.verify(receipt, exclude_old_transactions: true)` to make
+  the `:latest_iap_receipts` in response data only contains the latest item.
+* Returns error for the new `21100-21199 Internal data access error`.
+* Added new field `:pending_renewal_receipts` to `ReceiptVerifier.ResponseData`
 
 ## v0.5.0
 
