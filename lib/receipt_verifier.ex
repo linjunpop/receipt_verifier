@@ -75,6 +75,12 @@ defmodule ReceiptVerifier do
         verify(receipt, env: :sandbox)
       {:error, %Error{code: 21_008}} ->
         verify(receipt, env: :production)
+      {:error, %Error{code: code, message: msg, meta: meta}} when code in 21_100..21_199 ->
+        if Keyword.get(meta, :retry?) do
+          verify(receipt, opts)
+        else
+          {:error, %Error{code: code, message: msg}}
+        end
       {:error, reason} -> {:error, reason}
     end
   end

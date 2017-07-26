@@ -104,8 +104,7 @@ defmodule ReceiptVerifier.Parser do
     {:error, %Error{code: 21_009, message: message}}
   end
   def parse_response(%{"status" => status, "is-retryable" => retry?}) when status in 21_100..21_199 do
-    # TODO: retry?
-    {:error, %Error{code: status, message: "Internal data access error"}}
+    {:error, %Error{code: status, message: "Internal data access error", meta: [retry?: retry?]}}
   end
 
   defp parse_latest_iap_receipts(%{"latest_receipt_info" => latest_receipt_info}) when is_list(latest_receipt_info) do
