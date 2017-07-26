@@ -2,6 +2,8 @@
 
 Verify iTunes receipt with the App Store.
 
+⚠️ Only iOS 7 style app receipts is supported.
+
 [![Build
 Status](https://travis-ci.org/linjunpop/receipt_verifier.svg)](https://travis-ci.org/linjunpop/receipt_verifier)
 [![Hex.pm](https://img.shields.io/hexpm/v/receipt_verifier.svg?maxAge=2592000)](https://hex.pm/packages/receipt_verifier)
