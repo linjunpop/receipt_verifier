@@ -32,7 +32,17 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 ## Usage
 
-### Verify the receipt with the App Store server.
+Use `ReceiptVerifier/2` to verify the receipt. which accepts a Base64-Encoded
+receipt data and an optional option.
+
+Options:
+  - `env` - The environment, defaul to `:production`
+    - `:production` - production environment
+    - `:sandbox` - sandbox environment
+  - `exclude_old_transactions` - Exclude the old transactions
+  - `password` - the shared secret used for auto-renewable subscriptions
+
+### An Example
 
 ```elixir
 iex> ReceiptVerifier.verify(base64_encoded_receipt_data)
