@@ -18,7 +18,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   ```elixir
   def deps do
-    [{:receipt_verifier, "~> 0.6.0"}]
+    [{:receipt_verifier, "~> 0.7.0"}]
   end
   ```
 

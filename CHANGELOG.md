@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.7.0
+
 * Drop config the `shared_secret`, Added `:password` option to
   `ReceiptVerifier.verify/2`
 * Fixes if receipt is retyring with 21007 & 20118 status, the options will be
