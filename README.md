@@ -32,19 +32,6 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 ## Usage
 
-### Configuration
-
-> you can ignore this if you dont have auto-renewable product
-
-Follow [this guide](https://developer.apple.com/library/content/documentation/LanguagesUtilities/Conceptual/iTunesConnectInAppPurchase_Guide/Chapters/CreatingInAppPurchaseProducts.html#//apple_ref/doc/uid/TP40013727-CH3-SW2) to generate a shared secret, then config the `:receipt_verifier` application with:
-
-```elixir
-use Mix.Config
-
-config :receipt_verifier,
-  shared_secret: "my-secret"
-```
-
 ### Verify the receipt with the App Store server.
 
 ```elixir

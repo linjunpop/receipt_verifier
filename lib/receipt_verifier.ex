@@ -51,19 +51,23 @@ defmodule ReceiptVerifier do
   alias ReceiptVerifier.ResponseData
   alias ReceiptVerifier.Error
 
-  @doc """
-  Verify receipt in the env
-
-  - `opts`
-    - `env` - The environment
-      - `:production` - the production environment, default
-      - `:sandbox` - the sandbox environment
-    - `exclude_old_transactions` - Exclude the old transactions
-
-  > Note: If you send sandbox receipt to production server, it will be re-sent
-  to test server. Same for the production receipt.
+  @typedoc """
+  - `env` - The environment, defaul to `:production`
+    - `:production` - production environment
+    - `:sandbox` - sandbox environment
+  - `exclude_old_transactions` - Exclude the old transactions
+  - `password` - the shared secret
   """
-  @spec verify(String.t, Client.options) :: {:ok, ResponseData.t} | {:error, Error.t}
+  @type options :: [
+    env: :production | :sandbox,
+    exclude_old_transactions: boolean(),
+    password: String.t
+  ]
+
+  @doc """
+  Verify Base64-encoded receipt with the Apple Store
+  """
+  @spec verify(String.t, options) :: {:ok, ResponseData.t} | {:error, Error.t}
   def verify(receipt, opts \\ []) when is_binary(receipt) do
     with(
       {:ok, json} <- Client.request(receipt, opts),
@@ -72,9 +76,9 @@ defmodule ReceiptVerifier do
       {:ok, data}
     else
       {:error, %Error{code: 21_007}} ->
-        verify(receipt, env: :sandbox)
+        retry_in_env(receipt, :sandbox, opts)
       {:error, %Error{code: 21_008}} ->
-        verify(receipt, env: :production)
+        retry_in_env(receipt, :production, opts)
       {:error, %Error{code: code, message: msg, meta: meta}} when code in 21_100..21_199 ->
         if Keyword.get(meta, :retry?) do
           verify(receipt, opts)
@@ -83,5 +87,13 @@ defmodule ReceiptVerifier do
         end
       {:error, reason} -> {:error, reason}
     end
+  end
+
+  defp retry_in_env(receipt, env, opts) do
+    opts =
+      opts
+      |> Keyword.merge(env: env)
+
+    verify(receipt, opts)
   end
 end

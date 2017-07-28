@@ -6,11 +6,6 @@ defmodule ReceiptVerifier.Client do
   alias ReceiptVerifier.Error
   alias Poison.Parser, as: JSONParser
 
-  @type options :: [
-    env: :production | :sandbox,
-    exclude_old_transactions: boolean()
-  ]
-
   @endpoints [
     production: 'https://buy.itunes.apple.com/verifyReceipt',
     sandbox: 'https://sandbox.itunes.apple.com/verifyReceipt'
@@ -19,7 +14,7 @@ defmodule ReceiptVerifier.Client do
   @doc """
   Send the iTunes receipt to Apple Store, and parse the response as map
   """
-  @spec request(String.t, options) :: {:ok, map} | {:error, any}
+  @spec request(String.t, ReceiptVerifier.options) :: {:ok, map} | {:error, any}
   def request(receipt, opts \\ []) do
     with(
       {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, opts),
@@ -60,18 +55,18 @@ defmodule ReceiptVerifier.Client do
     %{
       "receipt-data" => receipt
     }
-    |> maybe_set_password()
+    |> maybe_set_password(opts)
     |> maybe_set_exclude_old_transactions(opts)
     |> Poison.encode!
   end
 
-  defp maybe_set_password(data) do
-    case Application.get_env(:receipt_verifier, :shared_secret) do
+  defp maybe_set_password(data, opts) do
+    case Keyword.get(opts, :password) do
       nil ->
         data
-      shared_secret ->
+      password ->
         data
-        |> Map.put("password", shared_secret)
+        |> Map.put("password", password)
     end
   end
 

@@ -26,7 +26,7 @@ defmodule ReceiptVerifierTest do
       use_cassette "auto_renewable_receipt" do
         base64_receipt = read_receipt_file("auto_renewable_receipt")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt)
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, password: "sample-secret")
 
         %ResponseData{app_receipt: app_receipt} = result
 
@@ -38,7 +38,7 @@ defmodule ReceiptVerifierTest do
       use_cassette "auto_renewable_receipt" do
         base64_receipt = read_receipt_file("auto_renewable_receipt")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt)
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, password: "sample-secret")
 
         %ResponseData{app_receipt: app_receipt, latest_iap_receipts: latest_iap_receipts} = result
         latest_iap_receipt = List.last(latest_iap_receipts)
@@ -53,7 +53,7 @@ defmodule ReceiptVerifierTest do
       use_cassette "auto_renewable_receipt" do
         base64_receipt = read_receipt_file("auto_renewable_receipt")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt)
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, password: "sample-secret")
 
         %ResponseData{pending_renewal_receipts: pending_renewal_receipts} = result
         pending_renewal_receipt = List.last(pending_renewal_receipts)
@@ -69,7 +69,7 @@ defmodule ReceiptVerifierTest do
       use_cassette "exclude_old_transactions_false" do
         base64_receipt = read_receipt_file("griddiary_production")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: false)
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: false, password: "sample-secret")
 
         assert 3 == length(result.latest_iap_receipts)
       end
@@ -79,7 +79,7 @@ defmodule ReceiptVerifierTest do
       use_cassette "exclude_old_transactions" do
         base64_receipt = read_receipt_file("griddiary_production")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: true)
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: true, password: "sample-secret")
 
         assert 1 == length(result.latest_iap_receipts)
       end
