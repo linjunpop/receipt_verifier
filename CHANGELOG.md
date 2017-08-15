@@ -2,6 +2,8 @@
 
 ## master
 
+* Fixes the retry flag in response for `21199` should be `is_retryable`.
+
 ## v0.7.0
 
 * Drop config the `shared_secret`, Added `:password` option to
