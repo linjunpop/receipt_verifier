@@ -2,6 +2,7 @@ defmodule ReceiptVerifier.Mixfile do
   use Mix.Project
 
   @version "0.7.0"
+  @url "https://github.com/linjunpop/receipt_verifier"
 
   def project do
     [
@@ -19,8 +20,8 @@ defmodule ReceiptVerifier.Mixfile do
         "vcr.check": :test,
         "vcr.show": :test
       ],
-      source_url: "https://github.com/linjunpop/receipt_verifier",
-      homepage_url: "https://github.com/linjunpop/receipt_verifier",
+      source_url: @url,
+      homepage_url: @url,
       docs: docs()
     ]
   end
@@ -56,7 +57,7 @@ defmodule ReceiptVerifier.Mixfile do
       maintainers: ["Jun Lin"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/linjunpop/receipt_verifier"
+        "GitHub" => @url
       }
     ]
   end
