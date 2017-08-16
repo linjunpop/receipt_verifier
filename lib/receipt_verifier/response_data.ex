@@ -7,6 +7,7 @@ defmodule ReceiptVerifier.ResponseData do
   alias ReceiptVerifier.AppReceipt
 
   @type t :: %__MODULE__{
+    environment: String.t,
     app_receipt: AppReceipt.t,
     base64_latest_app_receipt: String.t,
     latest_iap_receipts: list(IAPReceipt.t),
@@ -14,6 +15,7 @@ defmodule ReceiptVerifier.ResponseData do
   }
 
   defstruct [
+    environment: nil,
     app_receipt: nil,
     base64_latest_app_receipt: nil,
     latest_iap_receipts: [],

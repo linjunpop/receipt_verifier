@@ -4,6 +4,7 @@
 
 * Fixes the retry flag in response for `21199` should be `is_retryable`.
 * Handle `21010` status.
+* Added `environment` to `%ReceiptVerifier.ResponseData{}`.
 
 ## v0.7.0
 

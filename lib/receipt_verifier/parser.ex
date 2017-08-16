@@ -9,10 +9,11 @@ defmodule ReceiptVerifier.Parser do
 
   @doc false
   @spec parse_response(map()) :: {:ok, ResponseData.t} | {:error, Error.t}
-  def parse_response(%{"status" => 0, "receipt" => receipt, "latest_receipt" => latest_receipt} = data) do
+  def parse_response(%{"status" => 0, "environment" => environment, "receipt" => receipt, "latest_receipt" => latest_receipt} = data) do
     {
       :ok,
       %ResponseData{
+        environment: environment,
         app_receipt: AppReceipt.parse(receipt),
         base64_latest_app_receipt: latest_receipt,
         latest_iap_receipts: parse_latest_iap_receipts(data),
@@ -20,9 +21,10 @@ defmodule ReceiptVerifier.Parser do
       }
     }
   end
-  def parse_response(%{"status" => 0, "receipt" => receipt}) do
+  def parse_response(%{"status" => 0, "environment" => environment, "receipt" => receipt}) do
     {:ok,
       %ResponseData{
+        environment: environment,
         app_receipt: AppReceipt.parse(receipt)
       }
     }
