@@ -21,18 +21,7 @@ defmodule ReceiptVerifier.PendingRenewalReceipt do
     :product_id
   ]
 
-  @doc """
-  Parse the Pending Renewal Receipt, returns the parsed struct
-
-  ## Example
-  ```elixir
-  iex> ReceiptVerifier.PendingRenewalReceipt.parse(data)
-  ...> %ReceiptVerifier.PendingRenewalReceipt{auto_renew_product_id: "com.sumiapp.GridDiary.pro_subscription",
-   auto_renew_status: "0", expiration_intent: "1",
-   is_in_billing_retry_period: false,
-   product_id: "com.sumiapp.GridDiary.pro_subscription"}
-  ```
-  """
+  @doc false
   @spec parse(map) :: t
   def parse(data) when is_map(data) do
     attrs =

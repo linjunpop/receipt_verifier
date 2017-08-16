@@ -4,7 +4,7 @@ defmodule ReceiptVerifier do
 
   ## Example
       iex> ReceiptVerifier.verify(base64_encoded_receipt_data)
-      ...> {:ok, %ReceiptVerifier.ResponseData{app_receipt: %ReceiptVerifier.AppReceipt{adam_id: 0,
+      {:ok, %ReceiptVerifier.ResponseData{app_receipt: %ReceiptVerifier.AppReceipt{adam_id: 0,
         app_item_id: 0, application_version: "1241",
         bundle_id: "com.sumiapp.GridDiary", download_id: 0,
         in_app: [%ReceiptVerifier.IAPReceipt{expires_date: nil,

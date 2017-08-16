@@ -19,10 +19,9 @@ defmodule ReceiptVerifier.Mixfile do
         "vcr.check": :test,
         "vcr.show": :test
       ],
-      docs: [
-        main: "readme", # The main page in the docs
-        extras: ["README.md"]
-      ]
+      source_url: "https://github.com/linjunpop/receipt_verifier",
+      homepage_url: "https://github.com/linjunpop/receipt_verifier",
+      docs: docs()
     ]
   end
 
@@ -59,6 +58,15 @@ defmodule ReceiptVerifier.Mixfile do
       links: %{
         "GitHub" => "https://github.com/linjunpop/receipt_verifier"
       }
+    ]
+  end
+
+  defp docs do
+    [
+      main: "getting-started",
+      extras: [
+        "docs/Getting Started.md"
+      ]
     ]
   end
 end

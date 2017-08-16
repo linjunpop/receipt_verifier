@@ -1,7 +1,5 @@
 defmodule ReceiptVerifier.Client do
-  @moduledoc """
-  The HTTP Client to send request to App Store
-  """
+  @moduledoc false
 
   alias ReceiptVerifier.Error
   alias Poison.Parser, as: JSONParser

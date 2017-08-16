@@ -35,50 +35,7 @@ defmodule ReceiptVerifier.AppReceipt do
     iap_receipts: [],
   ]
 
-  @doc """
-  Parse the App Receipt, returns the parsed struct
-
-  ## Example
-  ```elixir
-  iex> ReceiptVerifier.AppReceipt.parse(json)
-  ...> %ReceiptVerifier.AppReceipt{adam_id: 0, app_item_id: 0,
-   application_version: "1241", bundle_id: "com.sumiapp.GridDiary",
-   download_id: 0,
-   in_app: [%ReceiptVerifier.IAPReceipt{expires_date: nil, is_trial_period: false,
-     original_purchase_date: %DateTime{calendar: Calendar.ISO, day: 17, hour: 6,
-      microsecond: {491000, 6}, minute: 52, month: 1, second: 13, std_offset: 0,
-      time_zone: "Etc/UTC", utc_offset: 0, year: 1970, zone_abbr: "UTC"},
-     original_transaction_id: "1000000118990828",
-     product_id: "com.sumiapp.GridDiary.pro",
-     purchase_date: %DateTime{calendar: Calendar.ISO, day: 17, hour: 7,
-      microsecond: {546000, 6}, minute: 33, month: 1, second: 48, std_offset: 0,
-      time_zone: "Etc/UTC", utc_offset: 0, year: 1970, zone_abbr: "UTC"},
-     quantity: 1, transaction_id: "1000000118990828",
-     web_order_line_item_id: nil},
-    %ReceiptVerifier.IAPReceipt{expires_date: nil, is_trial_period: false,
-     original_purchase_date: %DateTime{calendar: Calendar.ISO, day: 17, hour: 7,
-      microsecond: {546000, 6}, minute: 33, month: 1, second: 48, std_offset: 0,
-      time_zone: "Etc/UTC", utc_offset: 0, year: 1970, zone_abbr: "UTC"},
-     original_transaction_id: "1000000122102348",
-     product_id: "com.sumiapp.griddiary.test",
-     purchase_date: %DateTime{calendar: Calendar.ISO, day: 17, hour: 7,
-      microsecond: {546000, 6}, minute: 33, month: 1, second: 48, std_offset: 0,
-      time_zone: "Etc/UTC", utc_offset: 0, year: 1970, zone_abbr: "UTC"},
-     quantity: 1, transaction_id: "1000000122102348",
-     web_order_line_item_id: nil}], original_application_version: "1.0",
-   original_purchase_date: %DateTime{calendar: Calendar.ISO, day: 16, hour: 22,
-    microsecond: {400000, 6}, minute: 2, month: 1, second: 20, std_offset: 0,
-    time_zone: "Etc/UTC", utc_offset: 0, year: 1970, zone_abbr: "UTC"},
-   receipt_creation_date: %DateTime{calendar: Calendar.ISO, day: 17, hour: 7,
-    microsecond: {546000, 6}, minute: 33, month: 1, second: 48, std_offset: 0,
-    time_zone: "Etc/UTC", utc_offset: 0, year: 1970, zone_abbr: "UTC"},
-   receipt_type: "ProductionSandbox",
-   request_date: %DateTime{calendar: Calendar.ISO, day: 18, hour: 2,
-    microsecond: {590831, 6}, minute: 47, month: 1, second: 30, std_offset: 0,
-    time_zone: "Etc/UTC", utc_offset: 0, year: 1970, zone_abbr: "UTC"},
-   version_external_identifier: 0}
-  ```
-  """
+  @doc false
   @spec parse(map) :: t
   def parse(data) when is_map(data) do
     attrs =
