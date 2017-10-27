@@ -52,11 +52,12 @@ defmodule ReceiptVerifier do
   alias ReceiptVerifier.Error
 
   @typedoc """
-  - `env` - The environment, defaul to `:production`
+  - `env` - The environment, default to `:production`
     - `:production` - production environment
     - `:sandbox` - sandbox environment
   - `exclude_old_transactions` - Exclude the old transactions
   - `password` - the shared secret
+  - `raw` - if true, return response data as raw map, in case of success
   """
   @type options :: [
     env: :production | :sandbox,
@@ -71,7 +72,7 @@ defmodule ReceiptVerifier do
   def verify(receipt, opts \\ []) when is_binary(receipt) do
     with(
       {:ok, json} <- Client.request(receipt, opts),
-      {:ok, data} <- Parser.parse_response(json)
+      {:ok, data} <- parse(json, opts)
     ) do
       {:ok, data}
     else
@@ -95,5 +96,12 @@ defmodule ReceiptVerifier do
       |> Keyword.merge(env: env)
 
     verify(receipt, opts)
+  end
+
+  defp parse(json, opts) do
+    case Parser.parse_response(json) do
+      {:ok, data} -> if opts[:raw], do: {:ok, json}, else: {:ok, data}
+      {:error, error} -> {:error, error}
+    end
   end
 end
