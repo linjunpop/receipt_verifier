@@ -17,15 +17,17 @@ defmodule ReceiptVerifier.Parser do
         app_receipt: AppReceipt.parse(receipt),
         base64_latest_app_receipt: latest_receipt,
         latest_iap_receipts: parse_latest_iap_receipts(data),
-        pending_renewal_receipts: parse_pending_renewal_info(data)
+        pending_renewal_receipts: parse_pending_renewal_info(data),
+        raw: data
       }
     }
   end
-  def parse_response(%{"status" => 0, "environment" => environment, "receipt" => receipt}) do
+  def parse_response(%{"status" => 0, "environment" => environment, "receipt" => receipt} = data) do
     {:ok,
       %ResponseData{
         environment: environment,
-        app_receipt: AppReceipt.parse(receipt)
+        app_receipt: AppReceipt.parse(receipt),
+        raw: data
       }
     }
   end
