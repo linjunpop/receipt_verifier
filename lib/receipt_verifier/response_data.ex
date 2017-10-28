@@ -12,7 +12,7 @@ defmodule ReceiptVerifier.ResponseData do
     base64_latest_app_receipt: String.t,
     latest_iap_receipts: list(IAPReceipt.t),
     pending_renewal_receipts: list(IAPReceipt.t),
-    raw: Map.t
+    raw: map()
   }
 
   defstruct [
