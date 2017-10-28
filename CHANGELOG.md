@@ -2,6 +2,8 @@
 
 ## master
 
+* Added a key `raw` to `ReceiptVerifier.ResponseData`, Thanks @thousandsofthem.
+
 ## v0.8.0
 
 * Fixes the retry flag in response for `21199` should be `is_retryable`.
