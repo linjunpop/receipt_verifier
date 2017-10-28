@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.9.0
+
 * Added a key `raw` to `ReceiptVerifier.ResponseData`, Thanks @thousandsofthem.
 
 ## v0.8.0
