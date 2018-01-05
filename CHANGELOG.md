@@ -2,6 +2,8 @@
 
 ## master
 
+* Added `is_in_intro_offer_period` to `ReceiptVerifier.IAPReceipt`.
+
 ## v0.9.0
 
 * Added a key `raw` to `ReceiptVerifier.ResponseData`, Thanks @thousandsofthem.

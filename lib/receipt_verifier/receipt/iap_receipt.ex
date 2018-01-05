@@ -12,6 +12,7 @@ defmodule ReceiptVerifier.IAPReceipt do
     original_transaction_id: String.t,
     original_purchase_date: DateTime.t,
     is_trial_period: boolean(),
+    is_in_intro_offer_period: boolean(),
     expires_date: DateTime.t
   }
 
@@ -24,6 +25,7 @@ defmodule ReceiptVerifier.IAPReceipt do
     :original_transaction_id,
     :original_purchase_date,
     :is_trial_period,
+    :is_in_intro_offer_period,
     :expires_date,
   ]
 
@@ -40,18 +42,39 @@ defmodule ReceiptVerifier.IAPReceipt do
   defp do_parse_field({"purchase_date_ms", value}) do
     {:purchase_date, format_datetime(value)}
   end
+  defp do_parse_field({"purchase_date", _value}) do
+    {:skip, nil}
+  end
+  defp do_parse_field({"purchase_date_pst", _value}) do
+    {:skip, nil}
+  end
   defp do_parse_field({"original_purchase_date_ms", value}) do
     {:original_purchase_date, format_datetime(value)}
+  end
+  defp do_parse_field({"original_purchase_date", _value}) do
+    {:skip, nil}
+  end
+  defp do_parse_field({"original_purchase_date_pst", _value}) do
+    {:skip, nil}
   end
   defp do_parse_field({"is_trial_period", value}) do
     # In elixir, true is :true
     {:is_trial_period, String.to_atom(value)}
+  end
+  defp do_parse_field({"is_in_intro_offer_period", value}) do
+    {:is_in_intro_offer_period, String.to_atom(value)}
   end
   defp do_parse_field({"quantity", value}) do
     {:quantity, String.to_integer(value)}
   end
   defp do_parse_field({"expires_date_ms", value}) do
     {:expires_date, format_datetime(value)}
+  end
+  defp do_parse_field({"expires_date", _value}) do
+    {:skip, nil}
+  end
+  defp do_parse_field({"expires_date_pst", _value}) do
+    {:skip, nil}
   end
   defp do_parse_field({field, value}) do
     {String.to_atom(field), value}

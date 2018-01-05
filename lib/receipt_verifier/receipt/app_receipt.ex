@@ -48,11 +48,29 @@ defmodule ReceiptVerifier.AppReceipt do
   defp do_parse_field({"request_date_ms", value}) do
     {:request_date, format_datetime(value)}
   end
+  defp do_parse_field({"request_date", _value}) do
+    {:skip, nil}
+  end
+  defp do_parse_field({"request_date_pst", _value}) do
+    {:skip, nil}
+  end
   defp do_parse_field({"receipt_creation_date_ms", value}) do
     {:receipt_creation_date, format_datetime(value)}
   end
+  defp do_parse_field({"receipt_creation_date", _value}) do
+    {:skip, nil}
+  end
+  defp do_parse_field({"receipt_creation_date_pst", _value}) do
+    {:skip, nil}
+  end
   defp do_parse_field({"original_purchase_date_ms", value}) do
     {:original_purchase_date, format_datetime(value)}
+  end
+  defp do_parse_field({"original_purchase_date", _value}) do
+    {:skip, nil}
+  end
+  defp do_parse_field({"original_purchase_date_pst", _value}) do
+    {:skip, nil}
   end
   defp do_parse_field({"in_app", iaps}) do
     {:iap_receipts, Enum.map(iaps, &IAPReceipt.parse/1)}
