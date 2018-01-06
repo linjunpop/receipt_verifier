@@ -12,8 +12,8 @@ defmodule ReceiptVerifier.Client do
   @doc """
   Send the iTunes receipt to Apple Store, and parse the response as map
   """
-  @spec request(String.t, ReceiptVerifier.options) :: {:ok, map} | {:error, any}
-  def request(receipt, opts \\ []) do
+  @spec request(String.t, map) :: {:ok, map} | {:error, any}
+  def request(receipt, opts) do
     with(
       {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, opts),
       {:ok, json} <- JSONParser.parse(body)
@@ -32,8 +32,7 @@ defmodule ReceiptVerifier.Client do
   end
 
   defp do_request(receipt, opts) do
-    env = Keyword.get(opts, :env, :production)
-    url = get_endpoint_url(env)
+    url = get_endpoint_url(opts.env)
 
     request_body = prepare_request_body(receipt, opts)
     content_type = 'application/json'
@@ -48,6 +47,10 @@ defmodule ReceiptVerifier.Client do
     @endpoints
     |> Keyword.get(env)
   end
+  defp get_endpoint_url(:auto) do
+    @endpoints
+    |> Keyword.get(:production)
+  end
 
   defp prepare_request_body(receipt, opts) do
     %{
@@ -59,7 +62,7 @@ defmodule ReceiptVerifier.Client do
   end
 
   defp maybe_set_password(data, opts) do
-    case Keyword.get(opts, :password) do
+    case Map.get(opts, :password) do
       nil ->
         data
       password ->
@@ -69,7 +72,7 @@ defmodule ReceiptVerifier.Client do
   end
 
   defp maybe_set_exclude_old_transactions(data, opts) do
-    case Keyword.get(opts, :exclude_old_transactions) do
+    case Map.get(opts, :exclude_old_transactions) do
       nil ->
         data
       exclude_old_transactions ->
