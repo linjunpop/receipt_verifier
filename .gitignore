@@ -7,4 +7,6 @@ doc
 
 .elixir_ls
 
+.DS_Store
+
 .vscode
