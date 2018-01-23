@@ -61,10 +61,10 @@ defmodule ReceiptVerifier do
   - `password` - *(Optional)* the shared secret used for auto-renewable subscriptions
   """
   @type options :: [
-    env: :production | :sandbox | :auto,
-    exclude_old_transactions: boolean(),
-    password: String.t
-  ]
+          env: :production | :sandbox | :auto,
+          exclude_old_transactions: boolean(),
+          password: String.t()
+        ]
 
   @default_options [
     env: :auto
@@ -73,38 +73,38 @@ defmodule ReceiptVerifier do
   @doc """
   Verify Base64-encoded receipt with the Apple Store
   """
-  @spec verify(String.t, options) :: {:ok, ResponseData.t} | {:error, Error.t}
+  @spec verify(String.t(), options) :: {:ok, ResponseData.t()} | {:error, Error.t()}
   def verify(receipt, opts \\ []) when is_binary(receipt) do
     options =
       @default_options
       |> Keyword.merge(opts)
       |> Enum.into(%{})
 
-    with(
-      {:ok, json} <- Client.request(receipt, options),
-      {:ok, data} <- Parser.parse_response(json)
-    ) do
+    with {:ok, json} <- Client.request(receipt, options),
+         {:ok, data} <- Parser.parse_response(json) do
       {:ok, data}
     else
-      {:error, %Error{code: code} = error} when code in [21_007, 21_008]->
+      {:error, %Error{code: code} = error} when code in [21_007, 21_008] ->
         maybe_retry(receipt, error, options)
+
       {:error, %Error{code: code, message: msg, meta: meta}} when code in 21_100..21_199 ->
         if Keyword.get(meta, :retry?) do
           verify(receipt, options)
         else
           {:error, %Error{code: code, message: msg}}
         end
-      {:error, reason} -> {:error, reason}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
   defp maybe_retry(receipt, error, opts) do
-    with(
-      :auto <- opts.env
-    ) do
+    with :auto <- opts.env do
       case error do
         %Error{code: 21_007} ->
           retry_in_env(receipt, :sandbox, opts)
+
         %Error{code: 21_008} ->
           retry_in_env(receipt, :production, opts)
       end

@@ -6,12 +6,12 @@ defmodule ReceiptVerifier.PendingRenewalReceipt do
   """
 
   @type t :: %__MODULE__{
-    auto_renew_product_id: String.t,
-    auto_renew_status: String.t,
-    expiration_intent: String.t,
-    is_in_billing_retry_period: boolean,
-    product_id: String.t
-  }
+          auto_renew_product_id: String.t(),
+          auto_renew_status: String.t(),
+          expiration_intent: String.t(),
+          is_in_billing_retry_period: boolean,
+          product_id: String.t()
+        }
 
   defstruct [
     :auto_renew_product_id,
@@ -34,9 +34,11 @@ defmodule ReceiptVerifier.PendingRenewalReceipt do
   defp do_parse_field({"is_in_billing_retry_period", "0"}) do
     {:is_in_billing_retry_period, false}
   end
+
   defp do_parse_field({"is_in_billing_retry_period", "1"}) do
     {:is_in_billing_retry_period, true}
   end
+
   defp do_parse_field({field, value}) do
     {String.to_atom(field), value}
   end
