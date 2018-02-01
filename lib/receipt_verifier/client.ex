@@ -18,6 +18,9 @@ defmodule ReceiptVerifier.Client do
          {:ok, json} <- JSONParser.parse(body) do
       {:ok, json}
     else
+      {:ok, {{_, status_code, msg}, _, _body}} ->
+        {:error, %Error{code: status_code, message: msg}}
+
       {:error, :invalid} ->
         # Poison error
         {:error, %Error{code: 502, message: "The response from Apple's Server is malformed"}}
