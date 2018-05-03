@@ -31,6 +31,14 @@ defmodule ReceiptVerifier.Parser do
       }
     }
   end
+  def parse_response(%{"status" => 0, "receipt" => receipt} = data) do
+    {:ok,
+      %ResponseData{
+        app_receipt: AppReceipt.parse(receipt),
+        raw: data
+      }
+    }
+  end
   def parse_response(%{"status" => 21_000}) do
     {:error, %Error{code: 21_000, message: "The App Store could not read the JSON object you provided."}}
   end
