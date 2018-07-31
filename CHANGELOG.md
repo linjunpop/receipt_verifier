@@ -2,6 +2,8 @@
 
 ## master
 
+* Allow `Poison ~> 4.0` to be used. Thanks @ericentin.
+
 ## v0.10.0
 
 * Added `is_in_intro_offer_period` to `ReceiptVerifier.IAPReceipt`.
