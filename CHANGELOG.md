@@ -2,6 +2,9 @@
 
 ## master
 
+* Make JSON library an optional dependency,
+   [Jason](https://github.com/michalmuskala/jason) is recommended.
+
 ## v0.11.0
 
 * Allow `Poison ~> 4.0` to be used. Thanks @ericentin.

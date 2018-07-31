@@ -7,7 +7,8 @@ Simply add receipt_verifier to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:receipt_verifier, "~> 0.11.0"}
+    {:receipt_verifier, "~> 0.11.0"},
+    {:jason, "~> 1.0"} # or {:poison, "~> 4.0"}
   ]
 end
 ```
@@ -59,3 +60,12 @@ iex> ReceiptVerifier.verify(BASE64_ENCODED_RECEIPT_DATA, env: :production)
   version_external_identifier: 0}, base64_latest_app_receipt: nil,
  environment: "Sandbox", latest_iap_receipts: [], pending_renewal_receipts: []}
 ```
+
+## JSON Encoder
+
+  By default, `ReceiptVerifier` use `Jason` to encode JSON, if you want to use `Poison`,
+  you can configure `:receipt_verifier` application with:
+
+  ```elixir
+  config :receipt_verifier, :json_library, Poison
+  ```

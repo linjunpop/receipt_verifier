@@ -4,7 +4,7 @@ defmodule ReceiptVerifierTest do
 
   alias ReceiptVerifier.ResponseData
 
-  setup_all do
+  setup do
     ExVCR.Config.cassette_library_dir("test/fixtures/vcr_cassettes")
     :ok
   end
@@ -59,7 +59,9 @@ defmodule ReceiptVerifierTest do
         pending_renewal_receipt = List.last(pending_renewal_receipts)
 
         assert false == pending_renewal_receipt.is_in_billing_retry_period
-        assert "com.sumiapp.GridDiary.pro_subscription" == pending_renewal_receipt.auto_renew_product_id
+
+        assert "com.sumiapp.GridDiary.pro_subscription" ==
+                 pending_renewal_receipt.auto_renew_product_id
       end
     end
   end
@@ -69,7 +71,12 @@ defmodule ReceiptVerifierTest do
       use_cassette "exclude_old_transactions_false" do
         base64_receipt = read_receipt_file("griddiary_production")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: false, password: "sample-secret")
+        {:ok, result} =
+          ReceiptVerifier.verify(
+            base64_receipt,
+            exclude_old_transactions: false,
+            password: "sample-secret"
+          )
 
         assert 3 == length(result.latest_iap_receipts)
       end
@@ -79,7 +86,12 @@ defmodule ReceiptVerifierTest do
       use_cassette "exclude_old_transactions" do
         base64_receipt = read_receipt_file("griddiary_production")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt, exclude_old_transactions: true, password: "sample-secret")
+        {:ok, result} =
+          ReceiptVerifier.verify(
+            base64_receipt,
+            exclude_old_transactions: true,
+            password: "sample-secret"
+          )
 
         assert 1 == length(result.latest_iap_receipts)
       end
@@ -91,7 +103,8 @@ defmodule ReceiptVerifierTest do
       use_cassette "invalid_receipt" do
         base64_receipt = "foobar"
 
-        {:error, %ReceiptVerifier.Error{code: code, message: msg}} = ReceiptVerifier.verify(base64_receipt)
+        {:error, %ReceiptVerifier.Error{code: code, message: msg}} =
+          ReceiptVerifier.verify(base64_receipt)
 
         assert 21002 == code
         assert "The data in the receipt-data property was malformed or missing." == msg
@@ -104,7 +117,8 @@ defmodule ReceiptVerifierTest do
       use_cassette "production_receipt_to_sandbox" do
         base64_receipt = read_receipt_file("griddiary_production")
 
-        {:error, %ReceiptVerifier.Error{} = err} = ReceiptVerifier.verify(base64_receipt, env: :sandbox)
+        {:error, %ReceiptVerifier.Error{} = err} =
+          ReceiptVerifier.verify(base64_receipt, env: :sandbox)
 
         assert 21008 == err.code
       end
@@ -114,7 +128,8 @@ defmodule ReceiptVerifierTest do
       use_cassette "sandbox_receipt_to_production" do
         base64_receipt = read_receipt_file("receipt")
 
-        {:error, %ReceiptVerifier.Error{} = err} = ReceiptVerifier.verify(base64_receipt, env: :production)
+        {:error, %ReceiptVerifier.Error{} = err} =
+          ReceiptVerifier.verify(base64_receipt, env: :production)
 
         assert 21007 == err.code
       end
@@ -135,7 +150,7 @@ defmodule ReceiptVerifierTest do
 
   defp read_receipt_file(filename) do
     "test/fixtures/receipts/#{filename}"
-    |> File.read!
+    |> File.read!()
     |> String.replace("\n", "")
   end
 end

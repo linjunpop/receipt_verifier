@@ -2,6 +2,9 @@ defmodule ReceiptVerifier.Client do
   @moduledoc false
 
   alias ReceiptVerifier.Error
+  alias ReceiptVerifier.JSON
+
+  require JSON
 
   @endpoints [
     production: 'https://buy.itunes.apple.com/verifyReceipt',
@@ -14,7 +17,7 @@ defmodule ReceiptVerifier.Client do
   @spec request(String.t(), map) :: {:ok, map} | {:error, any}
   def request(receipt, opts) do
     with {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, opts),
-         {:ok, json} <- Poison.decode(body) do
+         {:ok, json} <- JSON.decode(body) do
       {:ok, json}
     else
       {:ok, {{_, status_code, msg}, _, _body}} ->
