@@ -35,7 +35,7 @@ defmodule ReceiptVerifier.Mixfile do
 
   defp deps do
     [
-      {:poison, "~> 2.0 or ~> 3.0"},
+      {:poison, "~> 2.0 or ~> 3.0 or ~> 4.0"},
       {:dialyxir, "~> 0.5", only: :dev},
       {:exvcr, "~> 0.8", only: :test},
       {:credo, "~> 0.7", only: [:dev, :test]},
