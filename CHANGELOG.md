@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.11.0
+
 * Allow `Poison ~> 4.0` to be used. Thanks @ericentin.
 
 ## v0.10.0

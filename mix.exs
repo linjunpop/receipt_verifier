@@ -1,7 +1,7 @@
 defmodule ReceiptVerifier.Mixfile do
   use Mix.Project
 
-  @version "0.10.0"
+  @version "0.11.0"
   @url "https://github.com/linjunpop/receipt_verifier"
 
   def project do
