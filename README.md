@@ -1,6 +1,6 @@
 # ReceiptVerifier
 
-Verify iTunes receipt with the App Store.
+Verify iOS App receipt with the App Store.
 
 ⚠️ Only iOS 7 style app receipt is supported.
 
