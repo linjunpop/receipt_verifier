@@ -7,7 +7,7 @@ Simply add receipt_verifier to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:receipt_verifier, "~> 0.11.0"},
+    {:receipt_verifier, "~> 0.12.0"},
     {:jason, "~> 1.0"} # or {:poison, "~> 4.0"}
   ]
 end

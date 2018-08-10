@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.12.0
+
 * Make JSON library an optional dependency,
    [Jason](https://github.com/michalmuskala/jason) is recommended.
 
