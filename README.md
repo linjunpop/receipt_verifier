@@ -38,6 +38,6 @@ Please view the detailed documentation at [https://hexdocs.pm/receipt_verifier](
 
 See [CHANGELOG.md](CHANGELOG.md)
 
-Contributing
+## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/linjunpop/receipt_verifier.
