@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.12.1
+
 * Fixes a retryable response with the error code from 21100 to 21199 may fail to retry.
 
 ## v0.12.0
