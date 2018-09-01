@@ -73,13 +73,17 @@ defmodule ReceiptVerifier do
   @doc """
   Verify Base64-encoded receipt with the Apple Store
   """
-  @spec verify(String.t(), options) :: {:ok, ResponseData.t()} | {:error, Error.t()}
+  @spec verify(binary(), options) :: {:ok, ResponseData.t()} | {:error, Error.t()}
   def verify(receipt, opts \\ []) when is_binary(receipt) do
     options =
       @default_options
       |> Keyword.merge(opts)
       |> Enum.into(%{})
 
+    do_verify(receipt, options)
+  end
+
+  defp do_verify(receipt, options) when is_map(options) do
     with {:ok, json} <- Client.request(receipt, options),
          {:ok, data} <- Parser.parse_response(json) do
       {:ok, data}
@@ -87,11 +91,11 @@ defmodule ReceiptVerifier do
       {:error, %Error{code: code} = error} when code in [21_007, 21_008] ->
         maybe_retry(receipt, error, options)
 
-      {:error, %Error{code: code, message: msg, meta: meta}} when code in 21_100..21_199 ->
-        if Keyword.get(meta, :retry?) do
-          verify(receipt, options)
+      {:error, %Error{code: code, meta: meta} = err} when code in 21_100..21_199 ->
+        if Keyword.get(meta, :retry?, false) do
+          do_verify(receipt, options)
         else
-          {:error, %Error{code: code, message: msg}}
+          {:error, err}
         end
 
       {:error, reason} ->
@@ -119,6 +123,6 @@ defmodule ReceiptVerifier do
       opts
       |> Map.merge(%{env: env})
 
-    verify(receipt, Map.to_list(opts))
+    do_verify(receipt, opts)
   end
 end

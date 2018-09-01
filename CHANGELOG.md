@@ -2,6 +2,8 @@
 
 ## master
 
+* Fixes a retryable response with the error code from 21100 to 21199 may fail to retry.
+
 ## v0.12.0
 
 * Make JSON library an optional dependency,
