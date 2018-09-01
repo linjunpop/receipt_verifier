@@ -36,7 +36,7 @@ receipt data and an optional option.
 
 ```elixir
 iex> ReceiptVerifier.verify(BASE64_ENCODED_RECEIPT_DATA, env: :production)
-%ReceiptVerifier.ResponseData{app_receipt: %ReceiptVerifier.AppReceipt{adam_id: 0,
+{:ok, %ReceiptVerifier.ResponseData{app_receipt: %ReceiptVerifier.AppReceipt{adam_id: 0,
   app_item_id: 0, application_version: "1241",
   bundle_id: "com.sumiapp.GridDiary", download_id: 0,
   iap_receipts: [%ReceiptVerifier.IAPReceipt{expires_date: nil,
@@ -58,7 +58,7 @@ iex> ReceiptVerifier.verify(BASE64_ENCODED_RECEIPT_DATA, env: :production)
   receipt_type: "ProductionSandbox",
   request_date: #DateTime<2016-11-11 07:49:50.831Z>,
   version_external_identifier: 0}, base64_latest_app_receipt: nil,
- environment: "Sandbox", latest_iap_receipts: [], pending_renewal_receipts: []}
+ environment: "Sandbox", latest_iap_receipts: [], pending_renewal_receipts: []}}
 ```
 
 ## JSON Encoder

@@ -29,7 +29,7 @@ then run `mix deps.get` and you are ready to go.
 
 ```elixir
 ReceiptVerifier.verify(BASE64_ENCODED_RECEIPT_DATA, env: :production)
-# %ReceiptVerifier.ResponseData{...}
+# {:ok, %ReceiptVerifier.ResponseData{...}}
 ```
 
 Please view the detailed documentation at [https://hexdocs.pm/receipt_verifier](https://hexdocs.pm/receipt_verifier).
@@ -41,3 +41,7 @@ See [CHANGELOG.md](CHANGELOG.md)
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/linjunpop/receipt_verifier.
+
+## See also
+
+- [ReceiptDecoder](https://github.com/linjunpop/receipt_decoder) - decode the receipt
