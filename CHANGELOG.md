@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.12.2
+
 * Fixes custom JSON adpater not wokring for encoding.
 
 ## v0.12.1
