@@ -66,7 +66,7 @@ defmodule ReceiptVerifier.Client do
     }
     |> maybe_set_password(opts)
     |> maybe_set_exclude_old_transactions(opts)
-    |> Poison.encode!()
+    |> JSON.encode!()
   end
 
   defp maybe_set_password(data, opts) do

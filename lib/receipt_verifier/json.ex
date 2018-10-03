@@ -36,4 +36,11 @@ defmodule ReceiptVerifier.JSON do
       unquote(@json_lib).decode(unquote(value))
     end
   end
+
+  @doc false
+  defmacro encode!(value) do
+    quote do
+      unquote(@json_lib).encode!(unquote(value))
+    end
+  end
 end
