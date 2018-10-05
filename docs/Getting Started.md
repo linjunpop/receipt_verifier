@@ -8,7 +8,7 @@ Simply add receipt_verifier to your list of dependencies in `mix.exs`:
 def deps do
   [
     {:receipt_verifier, "~> 0.12"},
-    {:jason, "~> 1.0"} # or {:poison, "~> 4.0"}
+    {:jason, "~> 1.0"}
   ]
 end
 ```
@@ -25,10 +25,9 @@ receipt data and an optional option.
 - `env` - *(Optional)* The environment, default to `:auto`
   - `:production` - production environment
   - `:sandbox` - sandbox environment
-  - `:auto` - choose the environment automatically, in this mode,
-    if you send sandbox receipt to production server, it will be
-    automatically resend to test server.
-    Same for the production receipt.
+  - `:auto` - choose the environment automatically. With this config,
+    if you send the receipt to a server with mismatched environment, it will be
+    automatically resend to another environment.
 - `exclude_old_transactions` - *(Optional)* Exclude the old transactions
 - `password` - *(Optional)* the shared secret used for auto-renewable subscriptions
 
