@@ -3,6 +3,7 @@
 ## master
 
 * Change the HTTP Client to hackney.
+* Make [Jason](https://github.com/michalmuskala/jason) an optional dependency.
 
 ## v0.12.2
 
