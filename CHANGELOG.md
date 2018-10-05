@@ -4,6 +4,7 @@
 
 * Change the HTTP Client to hackney.
 * Make [Jason](https://github.com/michalmuskala/jason) an optional dependency.
+* Requires Elixir 1.4.
 
 ## v0.12.2
 
