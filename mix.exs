@@ -8,7 +8,7 @@ defmodule ReceiptVerifier.Mixfile do
     [
       app: :receipt_verifier,
       version: @version,
-      elixir: "~> 1.3",
+      elixir: "~> 1.4",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       description: description(),
