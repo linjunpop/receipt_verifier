@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.13.0 
+
 * Change the HTTP Client to hackney.
 * Make [Jason](https://github.com/michalmuskala/jason) an optional dependency.
 * Requires Elixir 1.4.
