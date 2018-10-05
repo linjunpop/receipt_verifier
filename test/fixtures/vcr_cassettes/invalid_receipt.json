@@ -3,47 +3,45 @@
     "request": {
       "body": "{\"receipt-data\":\"foobar\"}",
       "headers": {
-        "Accept": "application/json"
+        "content-type": "application/json",
+        "accept": "application/json"
       },
       "method": "post",
       "options": {
-        "httpc_options": [],
-        "http_options": []
+        "pool": "receipt_verifier_hackney"
       },
       "request_body": "",
       "url": "https://buy.itunes.apple.com/verifyReceipt"
     },
     "response": {
+      "binary": false,
       "body": "{\"status\":21002}",
       "headers": {
-        "cache-control": "private",
-        "date": "Fri, 05 Jan 2018 02:55:41 GMT",
-        "content-length": "16",
-        "expires": "Fri, 05 Jan 2018 02:55:41 GMT",
-        "x-apple-jingle-correlation-key": "D6EJ2PZ2QL6V7FWRIP5SAAVQRI",
-        "x-apple-request-uuid": "1f889d3f-3a82-fd5f-96d1-43fb2002b08a",
-        "pod": "58",
+        "x-apple-jingle-correlation-key": "3KOS7RZ7LD542CER4ZZSGP52TY",
+        "x-apple-request-uuid": "da9d2fc7-3f58-fbcd-0891-e673233fba9e",
+        "pod": "42",
         "x-apple-translated-wo-url": "/WebObjects/MZFinance.woa/wa/verifyReceipt",
         "apple-tk": "false",
         "edge-control": "no-store",
         "x-apple-lokamai-no-cache": "true",
-        "itspod": "58",
-        "x-webobjects-loadaverage": "204",
+        "cache-control": "private",
+        "itspod": "42",
+        "x-webobjects-loadaverage": "101",
         "apple-seq": "0",
         "apple-originating-system": "MZFinance",
         "strict-transport-security": "max-age=31536000",
         "x-frame-options": "SAMEORIGIN",
         "x-apple-orig-url": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/verifyReceipt",
         "x-apple-application-site": "ST13",
-        "set-cookie": "itspod=58; version=\"1\"; expires=Mon, 05-Feb-2018 02:55:41 GMT; path=/; domain=.apple.com",
-        "apple-timing-app": "2 ms",
-        "x-apple-application-instance": "582489"
+        "date": "Fri, 05 Oct 2018 11:24:20 GMT",
+        "set-cookie": "itspod=42; version=\"1\"; expires=Mon, 05-Nov-2018 12:24:20 GMT; path=/; domain=.apple.com",
+        "apple-timing-app": "4 ms",
+        "expires": "Fri, 05 Oct 2018 11:24:20 GMT",
+        "x-apple-application-instance": "422484",
+        "content-length": "16",
+        "Set-Cookie": "ns-mzf-inst=179-4-443-150-22-8303-422484-42-st13; version=1; Max-Age=1800; path=/WebObjects/; domain=.apple.com; httponly"
       },
-      "status_code": [
-        "HTTP/1.1",
-        200,
-        "Apple WebObjects"
-      ],
+      "status_code": 200,
       "type": "ok"
     }
   }

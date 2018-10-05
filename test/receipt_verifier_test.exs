@@ -1,6 +1,6 @@
 defmodule ReceiptVerifierTest do
   use ExUnit.Case, async: false
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   alias ReceiptVerifier.ResponseData
 
@@ -26,42 +26,11 @@ defmodule ReceiptVerifierTest do
       use_cassette "auto_renewable_receipt" do
         base64_receipt = read_receipt_file("auto_renewable_receipt")
 
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt, password: "sample-secret")
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, password: "password")
 
         %ResponseData{app_receipt: app_receipt} = result
 
         assert "1241", app_receipt.application_version
-      end
-    end
-
-    test "latest iap receipt" do
-      use_cassette "auto_renewable_receipt" do
-        base64_receipt = read_receipt_file("auto_renewable_receipt")
-
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt, password: "sample-secret")
-
-        %ResponseData{app_receipt: app_receipt, latest_iap_receipts: latest_iap_receipts} = result
-        latest_iap_receipt = List.last(latest_iap_receipts)
-
-        assert 120 == length(latest_iap_receipts)
-        assert "1241", app_receipt.application_version
-        assert "com.sumiapp.GridDiary.pro_subscription", latest_iap_receipt.product_id
-      end
-    end
-
-    test "pending renewal receipt" do
-      use_cassette "auto_renewable_receipt" do
-        base64_receipt = read_receipt_file("auto_renewable_receipt")
-
-        {:ok, result} = ReceiptVerifier.verify(base64_receipt, password: "sample-secret")
-
-        %ResponseData{pending_renewal_receipts: pending_renewal_receipts} = result
-        pending_renewal_receipt = List.last(pending_renewal_receipts)
-
-        assert false == pending_renewal_receipt.is_in_billing_retry_period
-
-        assert "com.sumiapp.GridDiary.pro_subscription" ==
-                 pending_renewal_receipt.auto_renew_product_id
       end
     end
   end
@@ -75,7 +44,7 @@ defmodule ReceiptVerifierTest do
           ReceiptVerifier.verify(
             base64_receipt,
             exclude_old_transactions: false,
-            password: "sample-secret"
+            password: "password"
           )
 
         assert 3 == length(result.latest_iap_receipts)
@@ -90,7 +59,7 @@ defmodule ReceiptVerifierTest do
           ReceiptVerifier.verify(
             base64_receipt,
             exclude_old_transactions: true,
-            password: "sample-secret"
+            password: "password"
           )
 
         assert 1 == length(result.latest_iap_receipts)
