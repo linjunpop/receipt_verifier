@@ -2,6 +2,8 @@
 
 ## master
 
+* Change the HTTP Client to hackney.
+
 ## v0.12.2
 
 * Fixes custom JSON adpater not wokring for encoding.

@@ -7,8 +7,8 @@ defmodule ReceiptVerifier.Client do
   require JSON
 
   @endpoints [
-    production: 'https://buy.itunes.apple.com/verifyReceipt',
-    sandbox: 'https://sandbox.itunes.apple.com/verifyReceipt'
+    production: "https://buy.itunes.apple.com/verifyReceipt",
+    sandbox: "https://sandbox.itunes.apple.com/verifyReceipt"
   ]
 
   @doc """
@@ -16,21 +16,14 @@ defmodule ReceiptVerifier.Client do
   """
   @spec request(String.t(), map) :: {:ok, map} | {:error, any}
   def request(receipt, opts) do
-    with {:ok, {{_, 200, _}, _, body}} <- do_request(receipt, opts),
+    with {:ok, 200, _headers, client_ref} <- do_request(receipt, opts),
+         {:ok, body} <- :hackney.body(client_ref),
          {:ok, json} <- JSON.decode(body) do
       {:ok, json}
     else
-      {:ok, {{_, status_code, msg}, _, _body}} ->
+      {:ok, status_code, _headers, client_ref} ->
+        {:ok, msg} = :hackney.body(client_ref)
         {:error, %Error{code: status_code, message: msg}}
-
-      {:error, :invalid} ->
-        # Poison error
-        {:error, %Error{code: 502, message: "The response from Apple's Server is malformed"}}
-
-      {:error, {:invalid, msg}} ->
-        # Poison error
-        {:error,
-         %Error{code: 502, message: "The response from Apple's Server is malformed: #{msg}"}}
 
       {:error, reason} ->
         {:error, reason}
@@ -41,13 +34,17 @@ defmodule ReceiptVerifier.Client do
     url = get_endpoint_url(opts.env)
 
     request_body = prepare_request_body(receipt, opts)
-    content_type = 'application/json'
 
     request_headers = [
-      {'Accept', 'application/json'}
+      {"content-type", "application/json"},
+      {"accept", "application/json"}
     ]
 
-    :httpc.request(:post, {url, request_headers, content_type, request_body}, [], [])
+    options = [
+      {:pool, :receipt_verifier_hackney}
+    ]
+
+    :hackney.request(:post, url, request_headers, request_body, options)
   end
 
   defp get_endpoint_url(env) when env in [:sandbox, :production] do
