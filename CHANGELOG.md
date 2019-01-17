@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.13.1
+
 - Fixes deprecated time unit: `:milliseconds`.
 
 ## v0.13.0
