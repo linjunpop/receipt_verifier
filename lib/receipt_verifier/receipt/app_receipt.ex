@@ -90,6 +90,6 @@ defmodule ReceiptVerifier.AppReceipt do
   defp format_datetime(datetime) do
     datetime
     |> String.to_integer()
-    |> DateTime.from_unix!(:milliseconds)
+    |> DateTime.from_unix!(:millisecond)
   end
 end

@@ -38,11 +38,11 @@ defmodule ReceiptVerifier.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.14"},
+      {:hackney, "~> 1.15"},
       {:jason, "~> 1.0", optional: true},
       {:dialyxir, "~> 0.5", only: :dev},
       {:exvcr, "~> 0.8", only: :test},
-      {:credo, "~> 0.10", only: [:dev, :test]},
+      {:credo, "~> 1.0", only: [:dev, :test]},
       {:inch_ex, "~> 1.0", only: [:dev, :test, :docs]},
       {:ex_doc, "~> 0.19", only: [:dev, :docs]}
     ]
