@@ -41,10 +41,10 @@ defmodule ReceiptVerifier.Mixfile do
       {:hackney, "~> 1.15"},
       {:jason, "~> 1.0", optional: true},
       {:dialyxir, "~> 0.5", only: :dev},
-      {:exvcr, "~> 0.8", only: :test},
-      {:credo, "~> 1.0", only: [:dev, :test]},
+      {:exvcr, "~> 0.11", only: :test},
+      {:credo, "~> 1.1", only: [:dev, :test]},
       {:inch_ex, "~> 1.0", only: [:dev, :test, :docs]},
-      {:ex_doc, "~> 0.19", only: [:dev, :docs]}
+      {:ex_doc, "~> 0.21", only: [:dev, :docs]}
     ]
   end
 
