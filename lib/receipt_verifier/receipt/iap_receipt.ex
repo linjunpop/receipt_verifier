@@ -15,6 +15,7 @@ defmodule ReceiptVerifier.IAPReceipt do
           is_in_intro_offer_period: boolean(),
           expires_date: DateTime.t(),
           cancellation_date: DateTime.t(),
+          cancellation_reason: String.t(),
           subscription_group_identifier: String.t()
         }
 
@@ -30,6 +31,7 @@ defmodule ReceiptVerifier.IAPReceipt do
     :is_in_intro_offer_period,
     :expires_date,
     :cancellation_date,
+    :cancellation_reason,
     :subscription_group_identifier
   ]
 
