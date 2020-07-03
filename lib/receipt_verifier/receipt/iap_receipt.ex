@@ -14,6 +14,7 @@ defmodule ReceiptVerifier.IAPReceipt do
           is_trial_period: boolean(),
           is_in_intro_offer_period: boolean(),
           expires_date: DateTime.t(),
+          cancellation_date: DateTime.t(),
           subscription_group_identifier: String.t()
         }
 
@@ -28,6 +29,7 @@ defmodule ReceiptVerifier.IAPReceipt do
     :is_trial_period,
     :is_in_intro_offer_period,
     :expires_date,
+    :cancellation_date,
     :subscription_group_identifier
   ]
 
@@ -82,6 +84,7 @@ defmodule ReceiptVerifier.IAPReceipt do
     {:expires_date, format_datetime(value)}
   end
 
+
   defp do_parse_field({"expires_date", _value}) do
     {:skip, nil}
   end
@@ -89,6 +92,19 @@ defmodule ReceiptVerifier.IAPReceipt do
   defp do_parse_field({"expires_date_pst", _value}) do
     {:skip, nil}
   end
+
+  defp do_parse_field({"cancellation_date_ms", value}) do
+    {:cancellation_date, format_datetime(value)}
+  end
+
+  defp do_parse_field({"cancellation_date", _value}) do
+    {:skip, nil}
+  end
+
+  defp do_parse_field({"cancellation_date_pst", _value}) do
+    {:skip, nil}
+  end
+
 
   defp do_parse_field({field, value}) do
     {String.to_atom(field), value}
