@@ -13,7 +13,8 @@ defmodule ReceiptVerifier.IAPReceipt do
           original_purchase_date: DateTime.t(),
           is_trial_period: boolean(),
           is_in_intro_offer_period: boolean(),
-          expires_date: DateTime.t()
+          expires_date: DateTime.t(),
+          subscription_group_identifier: String.t()
         }
 
   defstruct [
@@ -26,7 +27,8 @@ defmodule ReceiptVerifier.IAPReceipt do
     :original_purchase_date,
     :is_trial_period,
     :is_in_intro_offer_period,
-    :expires_date
+    :expires_date,
+    :subscription_group_identifier
   ]
 
   @doc false
