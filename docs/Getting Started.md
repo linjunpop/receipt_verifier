@@ -6,7 +6,9 @@ Simply add receipt_verifier to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:receipt_verifier, "~> 0.9.0"}]
+  [
+    {:receipt_verifier, "~> 0.11.0"}
+  ]
 end
 ```
 
@@ -19,11 +21,15 @@ receipt data and an optional option.
 
 ### Options:
 
-- `env` - The environment, defaul to `:production`
+- `env` - *(Optional)* The environment, default to `:auto`
   - `:production` - production environment
   - `:sandbox` - sandbox environment
-- `exclude_old_transactions` - Exclude the old transactions
-- `password` - the shared secret used for auto-renewable subscriptions
+  - `:auto` - choose the environment automatically, in this mode,
+    if you send sandbox receipt to production server, it will be
+    automatically resend to test server.
+    Same for the production receipt.
+- `exclude_old_transactions` - *(Optional)* Exclude the old transactions
+- `password` - *(Optional)* the shared secret used for auto-renewable subscriptions
 
 ### Validate a receipt with App Store
 

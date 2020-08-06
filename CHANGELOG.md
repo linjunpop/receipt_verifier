@@ -2,7 +2,14 @@
 
 ## master
 
+## v0.11.0
+
+* Allow `Poison ~> 4.0` to be used. Thanks @ericentin.
+
+## v0.10.0
+
 * Added `is_in_intro_offer_period` to `ReceiptVerifier.IAPReceipt`.
+* Added `:auto` to the `env` option which make it explicitly to retry in different sandbox and production env.
 
 ## v0.9.0
 

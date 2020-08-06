@@ -42,8 +42,6 @@ defmodule ReceiptVerifier do
          time_zone: "Etc/UTC", utc_offset: 0, year: 1970, zone_abbr: "UTC"},
         version_external_identifier: 0}, base64_latest_app_receipt: nil,
        latest_iap_receipts: []}}
-
-  > Note: If you send sandbox receipt to production server, it will be auto resend to test server. Same for the production receipt.
   """
 
   alias ReceiptVerifier.Client
@@ -52,48 +50,75 @@ defmodule ReceiptVerifier do
   alias ReceiptVerifier.Error
 
   @typedoc """
-  - `env` - The environment, defaul to `:production`
+  - `env` - *(Optional)* The environment, default to `:auto`
     - `:production` - production environment
     - `:sandbox` - sandbox environment
-  - `exclude_old_transactions` - Exclude the old transactions
-  - `password` - the shared secret
+    - `:auto` - choose the environment automatically, in this mode,
+      if you send sandbox receipt to production server, it will be
+      automatically resend to test server.
+      Same for the production receipt.
+  - `exclude_old_transactions` - *(Optional)* Exclude the old transactions
+  - `password` - *(Optional)* the shared secret used for auto-renewable subscriptions
   """
   @type options :: [
-    env: :production | :sandbox,
-    exclude_old_transactions: boolean(),
-    password: String.t
+          env: :production | :sandbox | :auto,
+          exclude_old_transactions: boolean(),
+          password: String.t()
+        ]
+
+  @default_options [
+    env: :auto
   ]
 
   @doc """
   Verify Base64-encoded receipt with the Apple Store
   """
-  @spec verify(String.t, options) :: {:ok, ResponseData.t} | {:error, Error.t}
+  @spec verify(String.t(), options) :: {:ok, ResponseData.t()} | {:error, Error.t()}
   def verify(receipt, opts \\ []) when is_binary(receipt) do
-    with(
-      {:ok, json} <- Client.request(receipt, opts),
-      {:ok, data} <- Parser.parse_response(json)
-    ) do
+    options =
+      @default_options
+      |> Keyword.merge(opts)
+      |> Enum.into(%{})
+
+    with {:ok, json} <- Client.request(receipt, options),
+         {:ok, data} <- Parser.parse_response(json) do
       {:ok, data}
     else
-      {:error, %Error{code: 21_007}} ->
-        retry_in_env(receipt, :sandbox, opts)
-      {:error, %Error{code: 21_008}} ->
-        retry_in_env(receipt, :production, opts)
+      {:error, %Error{code: code} = error} when code in [21_007, 21_008] ->
+        maybe_retry(receipt, error, options)
+
       {:error, %Error{code: code, message: msg, meta: meta}} when code in 21_100..21_199 ->
         if Keyword.get(meta, :retry?) do
-          verify(receipt, opts)
+          verify(receipt, options)
         else
           {:error, %Error{code: code, message: msg}}
         end
-      {:error, reason} -> {:error, reason}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp maybe_retry(receipt, error, opts) do
+    with :auto <- opts.env do
+      case error do
+        %Error{code: 21_007} ->
+          retry_in_env(receipt, :sandbox, opts)
+
+        %Error{code: 21_008} ->
+          retry_in_env(receipt, :production, opts)
+      end
+    else
+      env when env in [:sandbox, :production] ->
+        {:error, error}
     end
   end
 
   defp retry_in_env(receipt, env, opts) do
     opts =
       opts
-      |> Keyword.merge(env: env)
+      |> Map.merge(%{env: env})
 
-    verify(receipt, opts)
+    verify(receipt, Map.to_list(opts))
   end
 end

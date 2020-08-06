@@ -14,10 +14,10 @@ defmodule ReceiptVerifier.Error do
   """
 
   @type t :: %__MODULE__{
-    code: integer,
-    message: any,
-    meta: keyword
-  }
+          code: integer,
+          message: any,
+          meta: keyword
+        }
 
   defstruct code: nil, message: "", meta: []
 end

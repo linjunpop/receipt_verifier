@@ -99,6 +99,40 @@ defmodule ReceiptVerifierTest do
     end
   end
 
+  describe "environment" do
+    test "production receipt in sandbox env" do
+      use_cassette "production_receipt_to_sandbox" do
+        base64_receipt = read_receipt_file("griddiary_production")
+
+        {:error, %ReceiptVerifier.Error{} = err} = ReceiptVerifier.verify(base64_receipt, env: :sandbox)
+
+        assert 21008 == err.code
+      end
+    end
+
+    test "sandbox receipt in production env" do
+      use_cassette "sandbox_receipt_to_production" do
+        base64_receipt = read_receipt_file("receipt")
+
+        {:error, %ReceiptVerifier.Error{} = err} = ReceiptVerifier.verify(base64_receipt, env: :production)
+
+        assert 21007 == err.code
+      end
+    end
+
+    test "sandbox receipt in auto env" do
+      use_cassette "sandbox_receipt_to_auto" do
+        base64_receipt = read_receipt_file("receipt")
+
+        {:ok, result} = ReceiptVerifier.verify(base64_receipt, env: :auto)
+
+        %ResponseData{app_receipt: app_receipt} = result
+
+        assert "1241", app_receipt.application_version
+      end
+    end
+  end
+
   defp read_receipt_file(filename) do
     "test/fixtures/receipts/#{filename}"
     |> File.read!
