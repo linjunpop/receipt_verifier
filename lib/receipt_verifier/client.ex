@@ -11,6 +11,14 @@ defmodule ReceiptVerifier.Client do
     sandbox: "https://sandbox.itunes.apple.com/verifyReceipt"
   ]
 
+  def child_spec do
+    :hackney_pool.child_spec(
+      :receipt_verifier,
+      timeout: 10_000,
+      max_connections: 100
+    )
+  end
+
   @doc """
   Send the iTunes receipt to Apple Store, and parse the response as map
   """
@@ -41,7 +49,9 @@ defmodule ReceiptVerifier.Client do
     ]
 
     options = [
-      {:pool, :receipt_verifier_hackney}
+      {:pool, :receipt_verifier},
+      {:connect_timeout, 10_000},
+      {:recv_timeout, 10_000}
     ]
 
     :hackney.request(:post, url, request_headers, request_body, options)

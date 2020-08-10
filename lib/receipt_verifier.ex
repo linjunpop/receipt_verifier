@@ -43,6 +43,7 @@ defmodule ReceiptVerifier do
         version_external_identifier: 0}, base64_latest_app_receipt: nil,
        latest_iap_receipts: []}}
   """
+  use Application
 
   alias ReceiptVerifier.Client
   alias ReceiptVerifier.Parser
@@ -69,6 +70,15 @@ defmodule ReceiptVerifier do
   @default_options [
     env: :auto
   ]
+
+  def start(_type, _opts) do
+    children = [
+      ReceiptVerifier.Client.child_spec()
+    ]
+
+    opts = [strategy: :one_for_one, name: ReceiptVerifier.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
 
   @doc """
   Verify Base64-encoded receipt with the Apple Store
