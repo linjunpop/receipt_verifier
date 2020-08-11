@@ -24,6 +24,31 @@ defmodule ReceiptVerifier.Client do
   """
   @spec request(String.t(), map) :: {:ok, map} | {:error, any}
   def request(receipt, opts) do
+    request_with_retry(receipt, opts, 3)
+  end
+
+  defp request_with_retry(receipt, opts, tries) do
+    result = try_request(receipt, opts)
+
+    if tries == 1 do
+      result
+    else
+      case result do
+        {:error, %Error{code: code}} when code in 500..599 ->
+          Process.sleep(100)
+          request_with_retry(receipt, opts, tries - 1)
+
+        {:error, :timeout} ->
+          Process.sleep(100)
+          request_with_retry(receipt, opts, tries - 1)
+
+        other ->
+          other
+      end
+    end
+  end
+
+  defp try_request(receipt, opts) do
     with {:ok, 200, _headers, client_ref} <- do_request(receipt, opts),
          {:ok, body} <- :hackney.body(client_ref),
          {:ok, json} <- JSON.decode(body) do
