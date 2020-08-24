@@ -7,6 +7,8 @@ defmodule ReceiptVerifier.Parser do
   alias ReceiptVerifier.PendingRenewalReceipt
   alias ReceiptVerifier.Error
 
+  require Logger
+
   @doc false
   @spec parse_response(map()) :: {:ok, ResponseData.t()} | {:error, Error.t()}
   def parse_response(
@@ -103,6 +105,18 @@ defmodule ReceiptVerifier.Parser do
   def parse_response(%{"status" => status, "is_retryable" => retry?})
       when status in 21_100..21_199 do
     {:error, %Error{code: status, message: "Internal data access error", meta: [retry?: retry?]}}
+  end
+
+  def parse_response(%{"status" => status, "is_retryable" => retry?} = response) do
+    Logger.warn("Unexpected status code in response: #{inspect(response)}")
+
+    {:error,
+     %Error{code: status, message: "Unexpected status code: #{status}", meta: [retry?: retry?]}}
+  end
+
+  def parse_response(response) do
+    Logger.warn("Unexpected or malformed Apple receipt response: #{inspect(response)}")
+    {:error, %Error{code: "-1", message: "Malformed response", meta: [retry?: false]}}
   end
 
   defp parse_latest_iap_receipts(%{"latest_receipt_info" => latest_receipt_info})
