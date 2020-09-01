@@ -42,6 +42,10 @@ defmodule ReceiptVerifier.Client do
           Process.sleep(100)
           request_with_retry(receipt, opts, tries - 1)
 
+        {:error, :closed} ->
+          Process.sleep(100)
+          request_with_retry(receipt, opts, tries - 1)
+
         other ->
           other
       end
