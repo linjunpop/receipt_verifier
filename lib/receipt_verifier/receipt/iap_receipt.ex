@@ -16,7 +16,8 @@ defmodule ReceiptVerifier.IAPReceipt do
           expires_date: DateTime.t(),
           cancellation_date: DateTime.t(),
           cancellation_reason: String.t(),
-          subscription_group_identifier: String.t()
+          subscription_group_identifier: String.t(),
+          in_app_ownership_type: String.t()
         }
 
   defstruct [
@@ -32,7 +33,8 @@ defmodule ReceiptVerifier.IAPReceipt do
     :expires_date,
     :cancellation_date,
     :cancellation_reason,
-    :subscription_group_identifier
+    :subscription_group_identifier,
+    :in_app_ownership_type
   ]
 
   @doc false
@@ -86,7 +88,6 @@ defmodule ReceiptVerifier.IAPReceipt do
     {:expires_date, format_datetime(value)}
   end
 
-
   defp do_parse_field({"expires_date", _value}) do
     {:skip, nil}
   end
@@ -106,7 +107,6 @@ defmodule ReceiptVerifier.IAPReceipt do
   defp do_parse_field({"cancellation_date_pst", _value}) do
     {:skip, nil}
   end
-
 
   defp do_parse_field({field, value}) do
     {String.to_atom(field), value}
