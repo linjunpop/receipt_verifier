@@ -13,7 +13,9 @@ defmodule ReceiptVerifier.IAPReceipt do
           original_purchase_date: DateTime.t(),
           is_trial_period: boolean(),
           is_in_intro_offer_period: boolean(),
-          expires_date: DateTime.t()
+          expires_date: DateTime.t(),
+          cancellation_date: DateTime.t(),
+          cancellation_reason: integer
         }
 
   defstruct [
@@ -26,7 +28,9 @@ defmodule ReceiptVerifier.IAPReceipt do
     :original_purchase_date,
     :is_trial_period,
     :is_in_intro_offer_period,
-    :expires_date
+    :expires_date,
+    :cancellation_date,
+    :cancellation_reason
   ]
 
   @doc false
@@ -86,6 +90,26 @@ defmodule ReceiptVerifier.IAPReceipt do
 
   defp do_parse_field({"expires_date_pst", _value}) do
     {:skip, nil}
+  end
+
+  defp do_parse_field({"cancellation_date_ms", value}) do
+    {:cancellation_date, format_datetime(value)}
+  end
+
+  defp do_parse_field({"cancellation_date", _value}) do
+    {:skip, nil}
+  end
+
+  defp do_parse_field({"cancellation_date_pst", _value}) do
+    {:skip, nil}
+  end
+
+  defp do_parse_field({"cancellation_reason", nil}) do
+    {:cancellation_reason, nil}
+  end
+
+  defp do_parse_field({"cancellation_reason", value}) do
+    {:cancellation_reason, String.to_integer(value)}
   end
 
   defp do_parse_field({field, value}) do
