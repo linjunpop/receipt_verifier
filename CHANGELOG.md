@@ -2,6 +2,8 @@
 
 ## master
 
+- Add `cancellation_date` & `cancellation_reason` to `IAPReceipt` (https://github.com/linjunpop/receipt_verifier/pull/13)
+
 ## v0.13.1
 
 - Fixes deprecated time unit: `:milliseconds`.
