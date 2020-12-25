@@ -1,42 +1,20 @@
 language: elixir
 matrix:
   include:
-    - otp_release: 22.2
+    - otp_release: 23.0.4
+      elixir: 1.11.2
+    - otp_release: 22.3
+      elixir: 1.11.2
+    - otp_release: 23.0.4
+      elixir: 1.10.4
+    - otp_release: 22.3
+      elixir: 1.10.4
+    - otp_release: 22.3
       elixir: 1.9.4
     - otp_release: 21.3
       elixir: 1.9.4
     - otp_release: 20.3
       elixir: 1.9.4
-    - otp_release: 22.2
-      elixir: 1.8.2
-    - otp_release: 21.3
-      elixir: 1.8.2
-    - otp_release: 20.3
-      elixir: 1.8.2
-    - otp_release: 22.2
-      elixir: 1.7.4
-    - otp_release: 21.3
-      elixir: 1.7.4
-    - otp_release: 20.3
-      elixir: 1.7.4
-    - otp_release: 19.3
-      elixir: 1.7.4
-    - otp_release: 21.3
-      elixir: 1.6.6
-    - otp_release: 20.3
-      elixir: 1.6.6
-    - otp_release: 19.3
-      elixir: 1.6.6
-    - otp_release: 20.3
-      elixir: 1.5.3
-    - otp_release: 19.3
-      elixir: 1.5.3
-    - otp_release: 20.3
-      elixir: 1.4.5
-    - otp_release: 19.3
-      elixir: 1.4.5
-    - otp_release: 18.3
-      elixir: 1.4.5
 sudo: false
 before_script:
   - mix deps.get --only test
