@@ -71,7 +71,7 @@ defmodule ReceiptVerifier do
     env: :auto
   ]
 
-  @retries 3
+  @retries 1
 
   def start(_type, _opts) do
     children = [
@@ -105,7 +105,7 @@ defmodule ReceiptVerifier do
 
       {:error, %Error{code: code, meta: meta} = err} when code in 21_100..21_199 ->
         if tries < @retries && Keyword.get(meta, :retry?, false) do
-          delay = (tries + 1) * 1000
+          delay = (tries + 1) * 100
           Process.sleep(delay)
           do_verify(receipt, options, tries + 1)
         else
