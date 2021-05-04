@@ -71,6 +71,8 @@ defmodule ReceiptVerifier do
     env: :auto
   ]
 
+  @retries 3
+
   def start(_type, _opts) do
     children = [
       ReceiptVerifier.Client.child_spec()
@@ -93,7 +95,7 @@ defmodule ReceiptVerifier do
     do_verify(receipt, options)
   end
 
-  defp do_verify(receipt, options) when is_map(options) do
+  defp do_verify(receipt, options, tries \\ 0) when is_map(options) do
     with {:ok, json} <- Client.request(receipt, options),
          {:ok, data} <- Parser.parse_response(json) do
       {:ok, data}
@@ -102,8 +104,10 @@ defmodule ReceiptVerifier do
         maybe_retry(receipt, error, options)
 
       {:error, %Error{code: code, meta: meta} = err} when code in 21_100..21_199 ->
-        if Keyword.get(meta, :retry?, false) do
-          do_verify(receipt, options)
+        if tries < @retries && Keyword.get(meta, :retry?, false) do
+          delay = (tries + 1) * 1000
+          Process.sleep(delay)
+          do_verify(receipt, options, tries + 1)
         else
           {:error, err}
         end
