@@ -4,33 +4,43 @@ defmodule ReceiptVerifier.IAPReceipt do
   """
 
   @type t :: %__MODULE__{
-          web_order_line_item_id: String.t(),
-          transaction_id: String.t(),
-          quantity: integer,
-          purchase_date: DateTime.t(),
-          product_id: String.t(),
-          original_transaction_id: String.t(),
-          original_purchase_date: DateTime.t(),
-          is_trial_period: boolean(),
-          is_in_intro_offer_period: boolean(),
-          expires_date: DateTime.t(),
           cancellation_date: DateTime.t(),
-          cancellation_reason: integer
+          cancellation_reason: integer,
+          expires_date: DateTime.t(),
+          in_app_ownership_type: String.t(),
+          is_in_intro_offer_period: boolean(),
+          is_trial_period: boolean(),
+          is_upgraded: boolean(),
+          offer_code_ref_name: String.t(),
+          original_purchase_date: DateTime.t(),
+          original_transaction_id: String.t(),
+          product_id: String.t(),
+          promotional_offer_id: String.t(),
+          purchase_date: DateTime.t(),
+          quantity: integer,
+          subscription_group_identifier: String.t(),
+          web_order_line_item_id: String.t(),
+          transaction_id: String.t()
         }
 
   defstruct [
+    :cancellation_date,
+    :cancellation_reason,
+    :expires_date,
+    :in_app_ownership_type,
+    :is_in_intro_offer_period,
+    :is_trial_period,
+    :offer_code_ref_name,
+    :original_purchase_date,
+    :original_transaction_id,
+    :product_id,
+    :promotional_offer_id,
+    :purchase_date,
+    :quantity,
+    :subscription_group_identifier,
     :web_order_line_item_id,
     :transaction_id,
-    :quantity,
-    :purchase_date,
-    :product_id,
-    :original_transaction_id,
-    :original_purchase_date,
-    :is_trial_period,
-    :is_in_intro_offer_period,
-    :expires_date,
-    :cancellation_date,
-    :cancellation_reason
+    is_upgraded: false
   ]
 
   @doc false
@@ -110,6 +120,11 @@ defmodule ReceiptVerifier.IAPReceipt do
 
   defp do_parse_field({"cancellation_reason", value}) do
     {:cancellation_reason, String.to_integer(value)}
+  end
+
+  defp do_parse_field({"is_upgraded", value}) do
+    # In elixir, true is :true
+    {:is_upgraded, String.to_atom(value)}
   end
 
   defp do_parse_field({field, value}) do

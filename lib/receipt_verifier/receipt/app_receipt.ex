@@ -6,32 +6,36 @@ defmodule ReceiptVerifier.AppReceipt do
   alias ReceiptVerifier.IAPReceipt
 
   @type t :: %__MODULE__{
-          version_external_identifier: integer,
-          request_date: DateTime.t(),
-          receipt_type: String.t(),
-          receipt_creation_date: DateTime.t(),
-          original_purchase_date: DateTime.t(),
-          original_application_version: String.t(),
-          download_id: integer,
-          bundle_id: String.t(),
-          application_version: String.t(),
-          app_item_id: integer,
           adam_id: integer,
-          iap_receipts: [IAPReceipt.t()]
+          app_item_id: integer,
+          application_version: String.t(),
+          bundle_id: String.t(),
+          download_id: integer,
+          expiration_date: DateTime.t(),
+          iap_receipts: [IAPReceipt.t()],
+          original_application_version: String.t(),
+          original_purchase_date: DateTime.t(),
+          preorder_date: DateTime.t(),
+          receipt_creation_date: DateTime.t(),
+          receipt_type: String.t(),
+          request_date: DateTime.t(),
+          version_external_identifier: integer
         }
 
-  defstruct version_external_identifier: nil,
-            request_date: nil,
-            receipt_type: nil,
-            receipt_creation_date: nil,
-            original_purchase_date: nil,
-            original_application_version: nil,
-            download_id: nil,
-            bundle_id: nil,
-            application_version: nil,
+  defstruct adam_id: nil,
             app_item_id: nil,
-            adam_id: nil,
-            iap_receipts: []
+            application_version: nil,
+            bundle_id: nil,
+            download_id: nil,
+            expiration_date: nil,
+            iap_receipts: [],
+            original_application_version: nil,
+            original_purchase_date: nil,
+            preorder_date: nil,
+            receipt_creation_date: nil,
+            receipt_type: nil,
+            request_date: nil,
+            version_external_identifier: nil
 
   @doc false
   @spec parse(map) :: t
@@ -76,6 +80,30 @@ defmodule ReceiptVerifier.AppReceipt do
   end
 
   defp do_parse_field({"original_purchase_date_pst", _value}) do
+    {:skip, nil}
+  end
+
+  defp do_parse_field({"expiration_date_ms", value}) do
+    {:original_purchase_date, format_datetime(value)}
+  end
+
+  defp do_parse_field({"expiration_date", _value}) do
+    {:skip, nil}
+  end
+
+  defp do_parse_field({"expiration_date_pst", _value}) do
+    {:skip, nil}
+  end
+
+  defp do_parse_field({"preorder_date_ms", value}) do
+    {:original_purchase_date, format_datetime(value)}
+  end
+
+  defp do_parse_field({"preorder_date", _value}) do
+    {:skip, nil}
+  end
+
+  defp do_parse_field({"preorder_date_pst", _value}) do
     {:skip, nil}
   end
 

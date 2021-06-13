@@ -9,16 +9,26 @@ defmodule ReceiptVerifier.PendingRenewalReceipt do
           auto_renew_product_id: String.t(),
           auto_renew_status: String.t(),
           expiration_intent: String.t(),
+          grace_period_expires_date: DateTime.t(),
           is_in_billing_retry_period: boolean,
-          product_id: String.t()
+          offer_code_ref_name: String.t(),
+          original_transaction_id: String.t(),
+          price_consent_status: String.t(),
+          product_id: String.t(),
+          promotional_offer_id: String.t()
         }
 
   defstruct [
     :auto_renew_product_id,
     :auto_renew_status,
     :expiration_intent,
+    :grace_period_expires_date,
     :is_in_billing_retry_period,
-    :product_id
+    :offer_code_ref_name,
+    :original_transaction_id,
+    :price_consent_status,
+    :product_id,
+    :promotional_offer_id
   ]
 
   @doc false
@@ -39,7 +49,25 @@ defmodule ReceiptVerifier.PendingRenewalReceipt do
     {:is_in_billing_retry_period, true}
   end
 
+    defp do_parse_field({"grace_period_expires_date_ms", value}) do
+    {:grace_period_expires_date, format_datetime(value)}
+  end
+
+  defp do_parse_field({"grace_period_expires_date", _value}) do
+    {:skip, nil}
+  end
+
+  defp do_parse_field({"grace_period_expires_date_pst", _value}) do
+    {:skip, nil}
+  end
+
   defp do_parse_field({field, value}) do
     {String.to_atom(field), value}
+  end
+
+  defp format_datetime(datetime) do
+    datetime
+    |> String.to_integer()
+    |> DateTime.from_unix!(:millisecond)
   end
 end

@@ -3,6 +3,7 @@
 ## master
 
 - Add `cancellation_date` & `cancellation_reason` to `IAPReceipt` (https://github.com/linjunpop/receipt_verifier/pull/13)
+- Update fields per the updated official doc: https://developer.apple.com/documentation/appstorereceipts/verifyreceipt
 
 ## v0.13.1
 
