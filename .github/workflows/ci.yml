@@ -1,0 +1,41 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  CACHE_VERSION: 1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: OTP ${{ matrix.otp }} - Elixir ${{ matrix.elixir }}
+    env:
+      MIX_ENV: "test"
+      ELIXIR_VERSION: ${{ matrix.elixir }}
+      OTP_VERSION: ${{ matrix.otp }}
+    strategy:
+      fail-fast: false
+      matrix:
+        otp: ['23.3', '22.3']
+        elixir: ['1.12.1', '1.11.4', '1.10.4']
+        include:
+          - otp: '24.0'
+            elixir: '1.12.1'
+          - otp: '24.0'
+            elixir: '1.11.4'
+          - otp: '21.3'
+            elixir: '1.11.4'
+          - otp: '21.3'
+            elixir: '1.10.4'
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Setup OTP and Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+      - name: Install Dependencies
+        run: mix deps.get
+      - name: Run Tests
+        run: mix test
