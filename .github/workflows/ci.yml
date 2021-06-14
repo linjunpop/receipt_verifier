@@ -8,6 +8,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
     env:
       MIX_ENV: "test"
       ELIXIR_VERSION: ${{ matrix.elixir }}
