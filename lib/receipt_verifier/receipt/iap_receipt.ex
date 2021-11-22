@@ -17,7 +17,9 @@ defmodule ReceiptVerifier.IAPReceipt do
           cancellation_date: DateTime.t(),
           cancellation_reason: String.t(),
           subscription_group_identifier: String.t(),
-          in_app_ownership_type: String.t()
+          in_app_ownership_type: String.t(),
+          promotional_offer_id: String.t(),
+          offer_code_ref_name: String.t()
         }
 
   defstruct [
@@ -34,7 +36,9 @@ defmodule ReceiptVerifier.IAPReceipt do
     :cancellation_date,
     :cancellation_reason,
     :subscription_group_identifier,
-    :in_app_ownership_type
+    :in_app_ownership_type,
+    :promotional_offer_id,
+    :offer_code_ref_name
   ]
 
   @doc false

@@ -10,7 +10,9 @@ defmodule ReceiptVerifier.PendingRenewalReceipt do
           auto_renew_status: String.t(),
           expiration_intent: String.t(),
           is_in_billing_retry_period: boolean,
-          product_id: String.t()
+          product_id: String.t(),
+          offer_code_ref_name: String.t(),
+          promotional_offer_id: String.t()
         }
 
   defstruct [
@@ -18,7 +20,9 @@ defmodule ReceiptVerifier.PendingRenewalReceipt do
     :auto_renew_status,
     :expiration_intent,
     :is_in_billing_retry_period,
-    :product_id
+    :product_id,
+    :offer_code_ref_name,
+    :promotional_offer_id
   ]
 
   @doc false
