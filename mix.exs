@@ -1,7 +1,7 @@
 defmodule ReceiptVerifier.Mixfile do
   use Mix.Project
 
-  @version "0.13.1"
+  @version "0.14.0"
   @url "https://github.com/linjunpop/receipt_verifier"
 
   def project do
@@ -40,10 +40,10 @@ defmodule ReceiptVerifier.Mixfile do
     [
       {:hackney, "~> 1.15"},
       {:jason, "~> 1.0", optional: true},
-      {:dialyxir, "~> 0.5", only: :dev},
+      {:dialyxir, "~> 1.1", only: :dev},
       {:exvcr, "~> 0.11", only: :test},
       {:credo, "~> 1.1", only: [:dev, :test]},
-      {:inch_ex, "~> 1.0", only: [:dev, :test, :docs]},
+      {:inch_ex, "~> 2.0", only: [:dev, :test, :docs]},
       {:ex_doc, "~> 0.21", only: [:dev, :docs]}
     ]
   end

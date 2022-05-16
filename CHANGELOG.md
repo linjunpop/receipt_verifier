@@ -2,6 +2,11 @@
 
 ## master
 
+## v0.14.0
+
+- Add `cancellation_date` & `cancellation_reason` to `IAPReceipt` (https://github.com/linjunpop/receipt_verifier/pull/13)
+- Update fields per the updated official doc: https://developer.apple.com/documentation/appstorereceipts/verifyreceipt
+
 ## v0.13.1
 
 - Fixes deprecated time unit: `:milliseconds`.
@@ -14,7 +19,7 @@
 
 ## v0.12.2
 
-- Fixes custom JSON adpater not wokring for encoding.
+- Fixes custom JSON adapter not working for encoding.
 
 ## v0.12.1
 
@@ -48,7 +53,7 @@
 
 - Drop config the `shared_secret`, Added `:password` option to
   `ReceiptVerifier.verify/2`
-- Fixes if receipt is retyring with 21007 & 20118 status, the options will be
+- Fixes if receipt is retrying with 21007 & 20118 status, the options will be
   ignored.
 
 ## v0.6.0
@@ -85,7 +90,7 @@
 ## v0.1.0
 
 - Support auto-renewable subscriptions.
-- Handle 503 Service Unavaliable.
+- Handle 503 Service Unavailable.
 
 ## v0.0.1
 
