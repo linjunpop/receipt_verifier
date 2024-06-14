@@ -1,5 +1,8 @@
 # ReceiptVerifier
 
+> [!IMPORTANT]
+> The [verifyReceipt](https://developer.apple.com/documentation/appstorereceipts/verifyreceipt) endpoint is deprecated, Please check [AppStore](https://github.com/linjunpop/app_store) to validate in-app purchases with App Store Server API.
+
 ![CI](https://github.com/linjunpop/receipt_verifier/actions/workflows/ci.yml/badge.svg)
 [![Hex.pm](https://img.shields.io/hexpm/v/receipt_verifier.svg?maxAge=2592000)](https://hex.pm/packages/receipt_verifier)
 [![codebeat badge](https://codebeat.co/badges/8fe288d1-e25c-4b24-bab0-f7d46f915145)](https://codebeat.co/projects/github-com-linjunpop-receipt_verifier-master)
@@ -7,7 +10,7 @@
 
 Verify iOS App receipt with the App Store.
 
-⚠️ Only iOS 7 style app receipt is supported. Please check [AppStore](https://github.com/linjunpop/app_store) for the package for App Store Server API.
+⚠️ Only iOS 7 style app receipt is supported.
 
 ## Installation
 
