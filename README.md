@@ -1,7 +1,7 @@
 # ReceiptVerifier
 
 > [!IMPORTANT]
-> The [verifyReceipt](https://developer.apple.com/documentation/appstorereceipts/verifyreceipt) endpoint is deprecated, Please check [AppStore](https://github.com/linjunpop/app_store) to validate in-app purchases with App Store Server API.
+> The [verifyReceipt](https://developer.apple.com/documentation/appstorereceipts/verify-receipt) endpoint is deprecated, Please check [AppStore](https://github.com/linjunpop/app_store) to validate in-app purchases with App Store Server API.
 
 ![CI](https://github.com/linjunpop/receipt_verifier/actions/workflows/ci.yml/badge.svg)
 [![Hex.pm](https://img.shields.io/hexpm/v/receipt_verifier.svg?maxAge=2592000)](https://hex.pm/packages/receipt_verifier)
